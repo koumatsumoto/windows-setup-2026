@@ -69,8 +69,8 @@ sudo apt install -y git
 ### Git グローバル設定
 
 ```bash
-git config --global user.name "Kou Matsumoto"
-git config --global user.email "kou.matsumoto.jp@gmail.com"
+git config --global user.name "Name"
+git config --global user.email "Email"
 ```
 
 ### GitHub CLI（gh）
@@ -83,8 +83,31 @@ git config --global user.email "kou.matsumoto.jp@gmail.com"
 gh auth login
 ```
 
+### Node.js 開発の基本パッケージ
+
+fnm（Node.js バージョン管理）のインストールとネイティブモジュールのビルドに必要なパッケージ:
+
+```bash
+sudo apt install -y curl unzip build-essential python3
+```
+
+| パッケージ      | 用途                                         |
+| --------------- | -------------------------------------------- |
+| curl            | fnm インストールスクリプトのダウンロード     |
+| unzip           | fnm パッケージの展開                         |
+| build-essential | ネイティブモジュール（node-gyp）のコンパイル |
+| python3         | node-gyp 10+ で必須                          |
+
 ### Node.js バージョン管理（fnm）
 
 公式手順: https://github.com/Schniz/fnm
 
 インストール後、シェル設定ファイル（`.bashrc` / `.zshrc`）に設定を追加。
+
+### Playwright ブラウザ依存パッケージ
+
+Node.js インストール後に自動で依存パッケージをインストール:
+
+```bash
+npx playwright install-deps
+```
