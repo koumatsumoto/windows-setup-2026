@@ -44,6 +44,7 @@ winget install -e --id Docker.DockerDesktop
 winget install -e --id Oracle.MySQLWorkbench
 winget install -e --id Logitech.GHUB
 winget install -e --id Discord.Discord
+winget install -e --id 7zip.7zip
 ```
 
 ### すべてのアプリを更新
@@ -83,6 +84,12 @@ git config --global user.email "Email"
 gh auth login
 ```
 
+Git の認証情報を gh 経由で設定:
+
+```bash
+gh auth setup-git
+```
+
 ### Node.js 開発の基本パッケージ
 
 fnm（Node.js バージョン管理）のインストールとネイティブモジュールのビルドに必要なパッケージ:
@@ -102,7 +109,11 @@ sudo apt install -y curl unzip build-essential python3
 
 公式手順: https://github.com/Schniz/fnm
 
-インストール後、シェル設定ファイル（`.bashrc` / `.zshrc`）に設定を追加。
+インストール後、シェル設定ファイル（`.bashrc` / `.zshrc`）に以下を追加:
+
+```bash
+eval "$(fnm env --use-on-cd)"
+```
 
 ### Playwright ブラウザ依存パッケージ
 
@@ -110,4 +121,34 @@ Node.js インストール後に自動で依存パッケージをインストー
 
 ```bash
 npx playwright install-deps
+```
+
+## 5. VSCode と WSL の連携
+
+WSL 内のプロジェクトを VSCode で開く。
+
+### 初回セットアップ
+
+WSL 内でプロジェクトディレクトリに移動し、以下を実行:
+
+```bash
+code .
+```
+
+初回実行時に VSCode Server と WSL 拡張機能（Remote - WSL）が自動でインストールされる。
+
+以降は `code .` で WSL 内のプロジェクトを直接 VSCode で編集可能。
+
+## 6. Git カスタマイズ
+
+### grb コマンド（Git Refresh Branch）
+
+main ブランチに戻り、最新を取得し、マージ済みのローカルブランチを削除するコマンド。
+
+`.bashrc` または `.zshrc` に追加:
+
+```bash
+grb() {
+  git switch main && git pull origin main && git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
+}
 ```
