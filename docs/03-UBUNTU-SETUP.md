@@ -102,25 +102,6 @@ grb() {
 
 この場合は `git rb` で実行する。
 
-### `grb` をスクリプトとして使う
-
-`grb` というコマンド名を維持したいなら、`~/bin/grb` のような実行ファイルにする。
-
-```bash
-mkdir -p ~/bin
-cat > ~/bin/grb <<'EOF'
-#!/usr/bin/env bash
-set -euo pipefail
-
-git switch main
-git pull origin main
-git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
-EOF
-chmod +x ~/bin/grb
-```
-
-`~/bin` が `PATH` に入っていれば、対話シェルでも Codex CLI でも `grb` として呼びやすい。
-
 ### 注意
 
 - 既定ブランチが `main` ではないリポジトリでは、このままだと動かない
