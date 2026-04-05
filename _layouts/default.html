@@ -9,38 +9,42 @@
     {% include head-custom.html %}
   </head>
   <body>
-    <header id="header_wrap" class="outer">
-      <div class="inner site-header">
-        <div class="site-header__text">
-          <a id="project_title" href="{{ '/' | relative_url }}">{{ site.title | default: site.github.repository_name }}</a>
-          <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+    <div class="app-shell">
+      <header id="header_wrap" class="outer">
+        <div class="site-container site-header">
+          <div class="site-header__text">
+            <a id="project_title" href="{{ '/' | relative_url }}">{{ site.title | default: site.github.repository_name }}</a>
+            <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
+          </div>
+          <p class="site-header__updated">最終更新: {{ site.time | date: "%Y%m%d %H:%M:%S" }}</p>
         </div>
-        <p class="site-header__updated">最終更新: {{ site.time | date: "%Y%m%d %H:%M:%S" }}</p>
-      </div>
-    </header>
+      </header>
 
-    <div id="main_content_wrap" class="outer">
-      <div class="inner layout-shell">
-        <aside class="side-nav" aria-label="ドキュメント一覧">
-          <h2 class="side-nav__title">Docs</h2>
-          <nav>
-            <ul class="side-nav__list">
-              {% assign nav_pages = site.pages | where_exp: "page", "page.url contains '/docs/'" | sort: "title" %}
-              <li class="side-nav__item">
-                <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>Home</a>
-              </li>
-              {% for nav_page in nav_pages %}
+      <div id="main_content_wrap" class="outer">
+        <div class="site-container layout-shell">
+          <aside class="side-nav" aria-label="ドキュメント一覧">
+            <h2 class="side-nav__title">Docs</h2>
+            <nav>
+              <ul class="side-nav__list">
+                {% assign nav_pages = site.pages | where_exp: "page", "page.url contains '/docs/'" | sort: "title" %}
                 <li class="side-nav__item">
-                  <a href="{{ nav_page.url | relative_url }}" {% if nav_page.url == page.url %}aria-current="page"{% endif %}>{{ nav_page.title }}</a>
+                  <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>Home</a>
                 </li>
-              {% endfor %}
-            </ul>
-          </nav>
-        </aside>
+                {% for nav_page in nav_pages %}
+                  <li class="side-nav__item">
+                    <a href="{{ nav_page.url | relative_url }}" {% if nav_page.url == page.url %}aria-current="page"{% endif %}>{{ nav_page.title }}</a>
+                  </li>
+                {% endfor %}
+              </ul>
+            </nav>
+          </aside>
 
-        <main id="main_content" class="main-content" role="main">
-          {{ content }}
-        </main>
+          <main id="main_content" class="main-content" role="main">
+            <div class="content-card">
+              {{ content }}
+            </div>
+          </main>
+        </div>
       </div>
     </div>
   </body>
