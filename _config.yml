@@ -1,0 +1,6 @@
+title: windows-setup-2026
+description: Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番で構築するための手順書
+theme: jekyll-theme-slate
+markdown: kramdown
+kramdown:
+  input: GFM

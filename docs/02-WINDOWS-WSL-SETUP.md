@@ -1,10 +1,15 @@
+---
+title: 02. Windows 側セットアップと WSL 準備
+permalink: /docs/02-WINDOWS-WSL-SETUP/
+---
+
 # 02. Windows 側セットアップと WSL 準備
 
 Windows の初期インストール後に、開発用アプリと WSL を使える状態にする手順。
 
 ## 前提
 
-- `01-WINDOWS-CLEAN-INSTALL.md` が完了している
+- [01. Windows 11 クリーンインストール]({{ '/docs/01-WINDOWS-CLEAN-INSTALL/' | relative_url }}) が完了している
 - Windows Update が完了している
 
 ## このドキュメントの完了条件
@@ -88,4 +93,4 @@ code .
 
 ## 次に読む
 
-Ubuntu 側の CLI とランタイムのセットアップは `03-UBUNTU-SETUP.md` に進む。
+Ubuntu 側の CLI とランタイムのセットアップは [03. Ubuntu 側の開発環境セットアップ]({{ '/docs/03-UBUNTU-SETUP/' | relative_url }}) に進む。

@@ -1,3 +1,8 @@
+---
+title: 01. Windows 11 クリーンインストール
+permalink: /docs/01-WINDOWS-CLEAN-INSTALL/
+---
+
 # 01. Windows 11 クリーンインストール
 
 Windows を初期状態から入れ直し、開発用のユーザープロファイルを安定させるまでの手順。
@@ -116,4 +121,4 @@ Windows を初期状態から入れ直し、開発用のユーザープロファ
 
 ## 次に読む
 
-Windows 側のツール導入と WSL の有効化は `02-WINDOWS-WSL-SETUP.md` に進む。
+Windows 側のツール導入と WSL の有効化は [02. Windows 側セットアップと WSL 準備]({{ '/docs/02-WINDOWS-WSL-SETUP/' | relative_url }}) に進む。
