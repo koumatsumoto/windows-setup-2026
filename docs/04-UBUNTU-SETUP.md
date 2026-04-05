@@ -43,6 +43,21 @@ git config --global pull.ff only
 git config --global rebase.autoStash true
 git config --global core.editor vim
 git config --global core.autocrlf input
+git config --global core.excludesfile ~/.gitglobalignore
+git config --global alias.rb '!git switch main && git pull --ff-only origin main && git branch --merged main | grep -v '"'"'^[* ]*main$'"'"' | xargs -r git branch -d'
+```
+
+```sh
+cat > ~/.gitglobalignore <<'EOF'
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.swp
+*.swo
+*~
+Session.vim
+.netrwhist
+EOF
 ```
 
 ## 4. GitHub CLI（gh）
