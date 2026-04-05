@@ -44,35 +44,19 @@ winget upgrade --all
 
 ## 2. Git 設定
 
-PowerShell で実行する。
+Git Bash で実行する。
 
-```powershell
-$env:GIT_USER_NAME = "Your Name"
-$env:GIT_USER_EMAIL = "your-email@example.com"
-git config --global user.name "$env:GIT_USER_NAME"; git config --global user.email "$env:GIT_USER_EMAIL"
-```
-
-推奨設定までまとめて入れる場合:
-
-```powershell
-$env:GIT_USER_NAME = "Your Name"
-$env:GIT_USER_EMAIL = "your-email@example.com"
-git config --global user.name "$env:GIT_USER_NAME"; git config --global user.email "$env:GIT_USER_EMAIL"; git config --global init.defaultBranch main; git config --global fetch.prune true; git config --global pull.ff only; git config --global rebase.autoStash true; git config --global core.editor "code --wait"; git config --global core.autocrlf true
-```
-
-入れておくとよい設定:
-
-- `init.defaultBranch main`: 新規リポジトリの既定ブランチ名を `main` に統一する
-- `fetch.prune true`: リモートで削除済みのブランチ参照を整理する
-- `pull.ff only`: 意図しない merge commit を防ぐ
-- `rebase.autoStash true`: 作業ツリーに変更がある状態でも rebase しやすくする
-- `core.editor "code --wait"`: Git のコミットメッセージ編集を VS Code で開く
-- `core.autocrlf true`: Windows 側では CRLF で作業しつつ、Git 内部では LF に正規化する
-
-設定確認:
-
-```powershell
-git config --global --list
+```sh
+export GIT_USER_NAME="Your Name"
+export GIT_USER_EMAIL="your-email@example.com"
+git config --global user.name "$GIT_USER_NAME"
+git config --global user.email "$GIT_USER_EMAIL"
+git config --global init.defaultBranch main
+git config --global fetch.prune true
+git config --global pull.ff only
+git config --global rebase.autoStash true
+git config --global core.editor "code --wait"
+git config --global core.autocrlf true
 ```
 
 ## 3. WSL インストール
