@@ -47,6 +47,7 @@ winget upgrade --all
 Git Bash で実行する。
 
 ```sh
+vim --version
 export GIT_USER_NAME="Your Name"
 export GIT_USER_EMAIL="your-email@example.com"
 git config --global user.name "$GIT_USER_NAME"
