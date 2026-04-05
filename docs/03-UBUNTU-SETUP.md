@@ -97,10 +97,10 @@ grb() {
 
 ```ini
 [alias]
-  grb = "!git switch main && git pull origin main && git branch --merged main | grep -v '^[* ]*main$' | xargs -r git branch -d"
+  rb = "!git switch main && git pull origin main && git branch --merged main | grep -v '^[* ]*main$' | xargs -r git branch -d"
 ```
 
-この場合は `git grb` で実行する。
+この場合は `git rb` で実行する。
 
 ### `grb` をスクリプトとして使う
 
