@@ -89,7 +89,7 @@ body {
 #project_title {
   color: var(--heading);
   display: inline-flex;
-  font-size: clamp(1.05rem, 0.95rem + 0.35vw, 1.28rem);
+  font-size: unquote("clamp(1.05rem, 0.95rem + 0.35vw, 1.28rem)");
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.2;
@@ -216,7 +216,7 @@ body {
 .content-card li,
 .content-card td,
 .content-card th {
-  font-size: clamp(0.98rem, 0.95rem + 0.12vw, 1.03rem);
+  font-size: unquote("clamp(0.98rem, 0.95rem + 0.12vw, 1.03rem)");
   line-height: 1.85;
   text-wrap: pretty;
 }
@@ -237,18 +237,18 @@ body {
 }
 
 .content-card h1 {
-  font-size: clamp(2rem, 1.66rem + 1.2vw, 3rem);
+  font-size: unquote("clamp(2rem, 1.66rem + 1.2vw, 3rem)");
   margin-top: 0;
 }
 
 .content-card h2 {
   border-bottom: 1px solid rgba(15, 23, 36, 0.08);
-  font-size: clamp(1.45rem, 1.28rem + 0.7vw, 2rem);
+  font-size: unquote("clamp(1.45rem, 1.28rem + 0.7vw, 2rem)");
   padding-bottom: 0.45rem;
 }
 
 .content-card h3 {
-  font-size: clamp(1.16rem, 1.08rem + 0.38vw, 1.45rem);
+  font-size: unquote("clamp(1.16rem, 1.08rem + 0.38vw, 1.45rem)");
 }
 
 .content-card h4,
@@ -395,11 +395,11 @@ body {
   }
 
   .content-card h1 {
-    font-size: clamp(1.7rem, 1.5rem + 1vw, 2.2rem);
+    font-size: unquote("clamp(1.7rem, 1.5rem + 1vw, 2.2rem)");
   }
 
   .content-card h2 {
-    font-size: clamp(1.28rem, 1.18rem + 0.7vw, 1.6rem);
+    font-size: unquote("clamp(1.28rem, 1.18rem + 0.7vw, 1.6rem)");
   }
 }
 
