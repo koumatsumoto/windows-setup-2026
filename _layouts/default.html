@@ -12,18 +12,15 @@
     <div class="app-shell">
       <header id="header_wrap" class="outer">
         <div class="site-container site-header">
-          <div class="site-header__text">
-            <a id="project_title" href="{{ '/' | relative_url }}">{{ site.title | default: site.github.repository_name }}</a>
-            <h2 id="project_tagline">{{ site.description | default: site.github.project_tagline }}</h2>
-          </div>
-          <p class="site-header__updated">最終更新: {{ site.time | date: "%Y%m%d %H:%M:%S" }}</p>
+          <a id="project_title" href="{{ '/' | relative_url }}">{{ site.title | default: site.github.repository_name }}</a>
+          <p class="site-header__updated">最終更新: {{ site.time | date: "%Y.%m.%d %H:%M" }}</p>
         </div>
       </header>
 
       <div id="main_content_wrap" class="outer">
         <div class="site-container layout-shell">
           <aside class="side-nav" aria-label="ドキュメント一覧">
-            <h2 class="side-nav__title">Docs</h2>
+            <h2 class="side-nav__title">Setup Guide</h2>
             <nav>
               <ul class="side-nav__list">
                 {% assign nav_pages = site.pages | where_exp: "page", "page.url contains '/docs/'" | sort: "title" %}
