@@ -5,13 +5,13 @@ permalink: /docs/01-WINDOWS-CLEAN-INSTALL/
 
 # 01. Windows 11 クリーンインストール
 
-Windows を初期状態から入れ直し、開発用のユーザープロファイルを安定させるまでの手順。
+Windows を初期状態から入れ直し、Windows Update の適用まで完了させる手順。
 
 ## このドキュメントの完了条件
 
 - Windows 11 のクリーンインストールが完了している
 - `C:\Users\kou` のように意図したローカルユーザー名でサインインできる
-- Windows Update と最低限の初期設定が終わっている
+- Windows Update が完了している
 
 ## 1. インストール USB の作成
 
@@ -90,35 +90,13 @@ Windows を初期状態から入れ直し、開発用のユーザープロファ
 - `C:\Users\kou` のまま運用できる
 - OneDrive、Microsoft Store、ライセンスが有効になる
 
-## 5. インストール直後の処理
+## 5. Windows Update
 
 ### Windows Update
 
 - Windows Update をすべて完了させる
 - 再起動が必要なら再起動する
 
-### 不要アプリのアンインストール
-
-- プリインストールされた不要な Windows アプリを削除する
-
-### Microsoft Store の更新
-
-- Microsoft Store を開き、すべてのアプリを更新する
-
-### 日本語言語設定
-
-- 設定 → 時刻と言語 → 言語と地域 で日本語設定を確認する
-- Windows Update 完了後に調整する
-
-### エクスプローラーの設定
-
-エクスプローラー → 表示 → 表示 から以下を有効にする。
-
-| 項目             | 理由                                    |
-| ---------------- | --------------------------------------- |
-| ファイル名拡張子 | `.js` / `.ts` / `.env` などの区別に必須 |
-| 隠しファイル     | `.gitignore`、`.env` などを表示する     |
-
 ## 次に読む
 
-Windows 側のツール導入と WSL の有効化は [02. Windows 側セットアップと WSL 準備]({{ '/docs/02-WINDOWS-WSL-SETUP/' | relative_url }}) に進む。
+Windows の初期設定は [02. Windows 設定]({{ '/docs/02-WINDOWS-SETUP/' | relative_url }}) に進む。

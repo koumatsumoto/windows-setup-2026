@@ -1,15 +1,15 @@
 ---
-title: 03. Ubuntu 側の開発環境セットアップ
-permalink: /docs/03-UBUNTU-SETUP/
+title: 04. Ubuntu 側の開発環境セットアップ
+permalink: /docs/04-UBUNTU-SETUP/
 ---
 
-# 03. Ubuntu 側の開発環境セットアップ
+# 04. Ubuntu 側の開発環境セットアップ
 
 WSL 上の Ubuntu に、開発で使う CLI とランタイムを入れる手順。
 
 ## 前提
 
-- [02. Windows 側セットアップと WSL 準備]({{ '/docs/02-WINDOWS-WSL-SETUP/' | relative_url }}) が完了している
+- [03. Windows 開発環境構築]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) が完了している
 - Ubuntu を起動し、Linux ユーザーが作成済みである
 
 ## このドキュメントの完了条件
