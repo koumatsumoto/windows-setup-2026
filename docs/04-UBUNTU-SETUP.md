@@ -17,7 +17,6 @@ WSL 上の Ubuntu に、開発で使う CLI とランタイムを入れる手順
 - Ubuntu 側で Git と GitHub CLI が使える
 - Node.js 開発に必要な基本パッケージが入っている
 - `fnm` のシェル初期化が済んでいる
-- `grb` を Bash 関数、Git alias、またはスクリプトとして運用できる
 
 ## 1. パッケージ更新
 
@@ -89,34 +88,3 @@ Node.js インストール後に依存パッケージをインストールする
 ```bash
 npx playwright install-deps
 ```
-
-## 8. Git カスタマイズ
-
-### `grb` を Bash 関数として使う
-
-対話シェルでは `.bashrc` または `.zshrc` に次を入れる。
-
-```bash
-grb() {
-  git switch main && git pull origin main && git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
-}
-```
-
-この方法は対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない実行環境ではそのまま使えないことがある。
-
-### `grb` を Git alias として使う
-
-`git` サブコマンドとして使えればよいなら、`~/.gitconfig` に shell 実行 alias を追加する。
-
-```ini
-[alias]
-  rb = "!git switch main && git pull origin main && git branch --merged main | grep -v '^[* ]*main$' | xargs -r git branch -d"
-```
-
-この場合は `git rb` で実行する。
-
-### 注意
-
-- 既定ブランチが `main` ではないリポジトリでは、このままだと動かない
-- `git branch --merged main` は `main` にマージ済みのローカルブランチだけを削除する
-- 不安があれば `git branch --merged main` の出力を確認してから削除する
