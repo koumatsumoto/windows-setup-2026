@@ -72,6 +72,27 @@ Desktop.ini
 *~
 Session.vim
 .netrwhist
+.env
+.env.*
+*.local
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.python-version
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/cache/
+.yarn/install-state.gz
+.parcel-cache/
+.next/
+.nuxt/
+.svelte-kit/
+dist/
 EOF
 ```
 
