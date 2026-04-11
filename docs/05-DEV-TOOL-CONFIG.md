@@ -17,6 +17,7 @@ Windows (Git Bash) と Ubuntu で使う Git・npm・pip 設定手順。大部分
 - Git のグローバル設定が完了している
 - `.gitglobalignore` が作成されている
 - npm のセキュリティ設定（`~/.npmrc`）が作成されている
+- Windows の場合は `script-shell` が `.npmrc` に設定されている
 - pip のセキュリティ設定が作成されている
 
 ## 1. Git グローバル設定
@@ -108,6 +109,20 @@ EOF
 
 - `ignore-scripts=true` の環境で一部パッケージ（sharp, bcrypt, esbuild 等）を使う場合は `npm install --ignore-scripts=false` で個別対応する
 - `min-release-age` は npm v11.10+、`allow-git` は npm v11.9+ で利用可能
+
+### Windows 固有: script-shell の設定
+
+Windows では npm のライフサイクルスクリプトがデフォルトで `cmd.exe` で実行される。Git Bash に統一するために `.npmrc` に追記する。
+
+```sh
+echo 'script-shell="C:\\Program Files\\Git\\bin\\bash.exe"' >> ~/.npmrc
+```
+
+| 設定 | 効果 |
+| --- | --- |
+| `script-shell` | npm スクリプトの実行シェルを Git Bash に変更し、シェル構文の互換性を確保する |
+
+Ubuntu では不要。デフォルトで `/bin/sh` が使われる。
 
 ## 4. pip セキュリティ設定
 
