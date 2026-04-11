@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ site.lang | default: 'ja' }}">
+  {% assign theme = site.theme_settings %}
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,14 +15,16 @@
         <div class="site-container site-header">
           <a id="project_title" href="{{ '/' | relative_url }}">{{ site.title | default: site.github.repository_name }}</a>
           <div class="site-header__meta">
-            <p class="site-header__updated">最終更新: {{ site.time | date: "%Y.%m.%d %H:%M" }}</p>
+            {% if theme.show_build_time %}
+              <p class="site-header__updated">{{ theme.build_time_label | default: "Build" }}: {{ site.time | date: "%Y.%m.%d %H:%M" }}</p>
+            {% endif %}
             <details class="side-nav-mobile">
               <summary class="side-nav-mobile__toggle" aria-label="Open navigation menu">
-                <span class="side-nav-mobile__label">Guide</span>
+                <span class="side-nav-mobile__label">{{ theme.mobile_nav_label | default: "Guide" }}</span>
                 <span class="side-nav-mobile__icon" aria-hidden="true"></span>
               </summary>
-              <nav class="side-nav-mobile__panel" aria-label="ドキュメント一覧">
-                <h2 class="side-nav__title">Setup Guide</h2>
+              <nav class="side-nav-mobile__panel" aria-label="{{ theme.nav_aria_label | default: 'ドキュメント一覧' }}">
+                <h2 class="side-nav__title">{{ theme.nav_title | default: "Setup Guide" }}</h2>
                 {% include site-nav-links.html %}
               </nav>
             </details>
@@ -31,8 +34,8 @@
 
       <div id="main_content_wrap" class="outer">
         <div class="site-container layout-shell">
-          <aside class="side-nav" aria-label="ドキュメント一覧">
-            <h2 class="side-nav__title">Setup Guide</h2>
+          <aside class="side-nav" aria-label="{{ theme.nav_aria_label | default: 'ドキュメント一覧' }}">
+            <h2 class="side-nav__title">{{ theme.nav_title | default: "Setup Guide" }}</h2>
             <nav>
               {% include site-nav-links.html %}
             </nav>

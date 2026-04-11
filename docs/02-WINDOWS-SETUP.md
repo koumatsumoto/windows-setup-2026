@@ -1,6 +1,8 @@
 ---
 title: 02. Windows 設定
 permalink: /docs/02-WINDOWS-SETUP/
+nav_order: 20
+nav_label: 02. Windows 設定
 ---
 
 # 02. Windows 設定

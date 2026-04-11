@@ -1,2 +1,8 @@
-.codex
-_site
+/.codex
+/.playwright-cli/
+_site/
+_site-local/
+.jekyll-cache/
+.sass-cache/
+.bundle/
+vendor/bundle/

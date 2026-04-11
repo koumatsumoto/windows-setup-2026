@@ -1,6 +1,8 @@
 ---
 title: 01. Windows 11 クリーンインストール
 permalink: /docs/01-WINDOWS-CLEAN-INSTALL/
+nav_order: 10
+nav_label: 01. Windows 11 クリーンインストール
 ---
 
 # 01. Windows 11 クリーンインストール

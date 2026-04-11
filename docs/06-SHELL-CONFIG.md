@@ -1,6 +1,8 @@
 ---
 title: 06. シェル初期化設定
 permalink: /docs/06-SHELL-CONFIG/
+nav_order: 60
+nav_label: 06. シェル初期化設定
 ---
 
 # 06. シェル初期化設定
