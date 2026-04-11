@@ -103,4 +103,5 @@ Node.js インストール後に依存パッケージをインストールする
 
 ```bash
 npx playwright install-deps
+npx playwright install
 ```

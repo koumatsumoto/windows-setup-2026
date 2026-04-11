@@ -48,8 +48,12 @@
   - `title`
   - `description`
   - `theme_settings.nav_title`
+  - `theme_settings.nav_aria_label`
+  - `theme_settings.home_nav_label`
   - `theme_settings.mobile_nav_label`
   - `theme_settings.docs_path_prefix`
+  - `theme_settings.show_build_time`
+  - `theme_settings.build_time_label`
   - 各ページの `nav_order`, `nav_label`, `permalink`
 
 ## Docker Preview
