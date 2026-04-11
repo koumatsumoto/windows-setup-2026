@@ -19,5 +19,5 @@ theme_settings:
   home_nav_label: Home
   mobile_nav_label: Guide
   docs_path_prefix: /docs/
-  show_build_time: false
-  build_time_label: Build
+  show_build_time: true
+  build_time_label: 最終更新
