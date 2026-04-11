@@ -64,25 +64,28 @@ http://127.0.0.1:4000
 ```
 
 - compose は生成先を `_site-local` に固定する
+- ポート公開は `127.0.0.1` に限定し、ローカル確認専用とする
 
 - 静的ビルドだけ確認したい場合:
 
 ```bash
-docker run --rm -u 1000:1000 -v "$PWD:/app" -w /app ruby:3.3 bash -lc "./bin/build-site -d _site-local"
+docker run --rm -u 1000:1000 -v "$PWD:/app" -w /app ruby:3.3 bash -lc "./bin/setup-site && ./bin/build-site -d _site-local"
 ```
 
 ## Playwright CLI Verification
 
-- Playwright CLI の browser が未導入なら一度だけ入れる
-
-```bash
-playwright-cli install-browser chromium
-```
+- このセクションは、この PC に Playwright CLI と browser が導入済みである前提の運用メモ
 
 - Docker でサイトを起動した状態でトップページを開く
 
 ```bash
 playwright-cli -s=docs-check open http://127.0.0.1:4000
+```
+
+- トップページのフルページスクリーンショットを保存する
+
+```bash
+playwright-cli -s=docs-check screenshot --filename .playwright-cli/docs-check-home.png --full-page
 ```
 
 - 代表ページへ移動して確認する
@@ -91,10 +94,9 @@ playwright-cli -s=docs-check open http://127.0.0.1:4000
 playwright-cli -s=docs-check goto http://127.0.0.1:4000/docs/03-WINDOWS-DEVELOPMENT-SETUP/
 ```
 
-- フルページのスクリーンショットを保存する
+- 代表ページのフルページスクリーンショットを保存する
 
 ```bash
-playwright-cli -s=docs-check screenshot --filename .playwright-cli/docs-check-home.png --full-page
 playwright-cli -s=docs-check screenshot --filename .playwright-cli/docs-check-dev-setup.png --full-page
 ```
 
