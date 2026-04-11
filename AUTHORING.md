@@ -36,7 +36,11 @@
   - `assets/`
   - `_config.yml`
   - `Gemfile`
+  - `Gemfile.lock`
   - `compose.yaml`
+  - `AUTHORING.md`
+  - `.playwright/cli.config.json`
+  - `.claude/skills/playwright-cli/`
   - `bin/setup-site`
   - `bin/serve-site`
   - `bin/build-site`

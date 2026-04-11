@@ -76,7 +76,18 @@ fnm をインストールする。シェルの初期化（`eval "$(fnm env ...)"
 source ~/.bashrc
 ```
 
-## 7. 開発ツール共通設定
+## 7. Node.js のインストール
+
+Playwright や `npx` を使う前に、`fnm` で Node.js を 1 系列インストールして有効化する。
+
+```bash
+fnm install --lts
+fnm default lts-latest
+node -v
+npx -v
+```
+
+## 8. 開発ツール共通設定
 
 vim が入っていない場合は先にインストールする。
 
@@ -86,7 +97,7 @@ sudo apt install -y vim
 
 [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順を実行し、完了後このドキュメントに戻る。
 
-## 8. Playwright ブラウザ依存パッケージ
+## 9. Playwright ブラウザ依存パッケージ
 
 Node.js インストール後に依存パッケージをインストールする。
 

@@ -7,6 +7,12 @@ plugins:
   - jekyll-seo-tag
 kramdown:
   input: GFM
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: default
 theme_settings:
   nav_title: Setup Guide
   nav_aria_label: ドキュメント一覧
