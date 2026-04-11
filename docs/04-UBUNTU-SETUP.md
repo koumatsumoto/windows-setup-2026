@@ -84,3 +84,21 @@ Node.js インストール後に依存パッケージをインストールする
 ```bash
 npx playwright install-deps
 ```
+
+## 8. grb（Bash 関数）
+
+マージ済みブランチを一括削除する関数。`.bashrc` に追加する。
+
+```bash
+grb() {
+  git switch main && git pull origin main && git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
+}
+```
+
+この方法は対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない実行環境ではそのまま使えないことがある。その場合は `git rb`（[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) で設定済み）を使う。
+
+### 注意
+
+- 既定ブランチが `main` ではないリポジトリでは、このままだと動かない
+- `git branch --merged main` は `main` にマージ済みのローカルブランチだけを削除する
+- 不安があれば `git branch --merged main` の出力を確認してから削除する
