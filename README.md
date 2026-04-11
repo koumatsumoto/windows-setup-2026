@@ -45,7 +45,7 @@ GitHub Pages 互換のローカル確認を前提に、`github-pages` gem を使
   - CSS と見た目
 - `index.md`, `docs/*.md`
   - 公開コンテンツ
-- `docs/authoring.md`
+- `AUTHORING.md`
   - 運用者向けの theme contract と再利用メモ
 
 ## Theme Contract
