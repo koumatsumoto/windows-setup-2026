@@ -1,6 +1,17 @@
 title: windows-setup-2026
 description: Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番で構築するための手順書
+lang: ja
 timezone: Asia/Tokyo
 markdown: kramdown
+plugins:
+  - jekyll-seo-tag
 kramdown:
   input: GFM
+theme_settings:
+  nav_title: Setup Guide
+  nav_aria_label: ドキュメント一覧
+  home_nav_label: Home
+  mobile_nav_label: Guide
+  docs_path_prefix: /docs/
+  show_build_time: false
+  build_time_label: Build

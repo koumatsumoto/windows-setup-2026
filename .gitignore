@@ -1,2 +1,7 @@
-.codex
-_site
+/.codex
+_site/
+_site-local/
+.jekyll-cache/
+.sass-cache/
+.bundle/
+vendor/bundle/

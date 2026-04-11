@@ -1,5 +1,6 @@
 ---
 title: Windows Setup 2026
+nav_hidden: true
 ---
 
 # Windows Setup 2026

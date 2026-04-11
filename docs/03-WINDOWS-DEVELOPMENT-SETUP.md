@@ -1,6 +1,8 @@
 ---
 title: 03. Windows 開発環境構築
 permalink: /docs/03-WINDOWS-DEVELOPMENT-SETUP/
+nav_order: 30
+nav_label: 03. Windows 開発環境構築
 ---
 
 # 03. Windows 開発環境構築

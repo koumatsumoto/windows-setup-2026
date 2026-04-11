@@ -1,6 +1,8 @@
 ---
 title: 05. 開発ツール共通設定
 permalink: /docs/05-DEV-TOOL-CONFIG/
+nav_order: 50
+nav_label: 05. 開発ツール共通設定
 ---
 
 # 05. 開発ツール共通設定

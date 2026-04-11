@@ -1,6 +1,8 @@
 ---
 title: 04. Ubuntu 側の開発環境セットアップ
 permalink: /docs/04-UBUNTU-SETUP/
+nav_order: 40
+nav_label: 04. Ubuntu 側の開発環境セットアップ
 ---
 
 # 04. Ubuntu 側の開発環境セットアップ
