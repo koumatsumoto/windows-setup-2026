@@ -17,7 +17,7 @@ WSL 上の Ubuntu に、開発で使う CLI とランタイムを入れる手順
 - Ubuntu 側で Git と GitHub CLI が使える
 - Node.js 開発に必要な基本パッケージが入っている
 - `fnm` のシェル初期化が済んでいる
-- `grb` を Bash 関数、Git alias、またはスクリプトとして運用できる
+- [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順が完了している
 
 ## 1. パッケージ更新
 
@@ -31,14 +31,7 @@ sudo apt update -y && sudo apt full-upgrade -y
 sudo apt install -y git
 ```
 
-## 3. Git グローバル設定
-
-```bash
-git config --global user.name "Name"
-git config --global user.email "Email"
-```
-
-## 4. GitHub CLI（gh）
+## 3. GitHub CLI（gh）
 
 公式手順: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
 
@@ -49,7 +42,7 @@ gh auth login
 gh auth setup-git
 ```
 
-## 5. Node.js 開発の基本パッケージ
+## 4. Node.js 開発の基本パッケージ
 
 `fnm` の導入とネイティブモジュールのビルドに必要なパッケージ:
 
@@ -64,7 +57,7 @@ sudo apt install -y curl unzip build-essential python3
 | build-essential | ネイティブモジュール（node-gyp）のコンパイル |
 | python3         | node-gyp 10+ で必須                          |
 
-## 6. Node.js バージョン管理（fnm）
+## 5. Node.js バージョン管理（fnm）
 
 公式手順: https://github.com/Schniz/fnm
 
@@ -74,6 +67,16 @@ sudo apt install -y curl unzip build-essential python3
 eval "$(fnm env --use-on-cd --shell bash)"
 ```
 
+## 6. 開発ツール共通設定
+
+vim が入っていない場合は先にインストールする。
+
+```bash
+sudo apt install -y vim
+```
+
+[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順を実行し、完了後このドキュメントに戻る。
+
 ## 7. Playwright ブラウザ依存パッケージ
 
 Node.js インストール後に依存パッケージをインストールする。
@@ -82,11 +85,9 @@ Node.js インストール後に依存パッケージをインストールする
 npx playwright install-deps
 ```
 
-## 8. Git カスタマイズ
+## 8. grb（Bash 関数）
 
-### `grb` を Bash 関数として使う
-
-対話シェルでは `.bashrc` または `.zshrc` に次を入れる。
+マージ済みブランチを一括削除する関数。`.bashrc` に追加する。
 
 ```bash
 grb() {
@@ -94,18 +95,7 @@ grb() {
 }
 ```
 
-この方法は対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない実行環境ではそのまま使えないことがある。
-
-### `grb` を Git alias として使う
-
-`git` サブコマンドとして使えればよいなら、`~/.gitconfig` に shell 実行 alias を追加する。
-
-```ini
-[alias]
-  rb = "!git switch main && git pull origin main && git branch --merged main | grep -v '^[* ]*main$' | xargs -r git branch -d"
-```
-
-この場合は `git rb` で実行する。
+この方法は対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない実行環境ではそのまま使えないことがある。その場合は `git rb`（[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) で設定済み）を使う。
 
 ### 注意
 

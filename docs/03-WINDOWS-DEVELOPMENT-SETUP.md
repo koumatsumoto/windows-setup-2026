@@ -16,7 +16,7 @@ Windows 側で使うアプリを入れ、WSL と Ubuntu を開発用に使える
 ## このドキュメントの完了条件
 
 - Git、VS Code、Docker Desktop など Windows 側アプリが入っている
-- Windows 側の Git 設定が完了している
+- [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Windows 向け手順が完了している
 - WSL と Ubuntu がインストール済みである
 - Ubuntu を初回起動し、Linux ユーザー作成まで終わっている
 - VS Code と WSL の連携が完了している
@@ -42,14 +42,9 @@ winget install -e --id 7zip.7zip
 winget upgrade --all
 ```
 
-## 2. Git 設定
+## 2. 開発ツール共通設定
 
-PowerShell で実行する。
-
-```powershell
-git config --global user.name "Name"
-git config --global user.email "Email"
-```
+Git Bash で [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の手順を実行する。事前に `vim --version` で vim が利用可能なことを確認する。
 
 ## 3. WSL インストール
 
