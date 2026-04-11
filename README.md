@@ -33,10 +33,21 @@ GitHub Pages 互換のローカル確認を前提に、`github-pages` gem を使
 ./bin/build-site
 ```
 
+### Docker Compose で起動
+
+```bash
+docker compose up site
+```
+
+起動後は `http://127.0.0.1:4000` を開く。
+compose は生成先を `_site-local` に固定して、既存 `_site/` の権限差分に引きずられないようにする。
+
 ## 構成
 
 - `_config.yml`
   - サイト全体設定とテーマ設定
+- `compose.yaml`
+  - Docker ベースのローカル確認入口
 - `_layouts/`
   - ページ骨格
 - `_includes/`
@@ -92,6 +103,7 @@ GitHub Pages 互換のローカル確認を前提に、`github-pages` gem を使
 - `assets/`
 - `_config.yml`
 - `Gemfile`
+- `compose.yaml`
 - `bin/setup-site`
 - `bin/serve-site`
 - `bin/build-site`

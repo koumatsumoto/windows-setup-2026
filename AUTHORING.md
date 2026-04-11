@@ -36,6 +36,7 @@
   - `assets/`
   - `_config.yml`
   - `Gemfile`
+  - `compose.yaml`
   - `bin/setup-site`
   - `bin/serve-site`
   - `bin/build-site`
@@ -46,3 +47,59 @@
   - `theme_settings.mobile_nav_label`
   - `theme_settings.docs_path_prefix`
   - 各ページの `nav_order`, `nav_label`, `permalink`
+
+## Docker Preview
+
+- Jekyll の build から serve まで Docker で完結させたい場合は `compose.yaml` を使う
+- 起動:
+
+```bash
+docker compose up site
+```
+
+- 公開 URL:
+
+```text
+http://127.0.0.1:4000
+```
+
+- compose は生成先を `_site-local` に固定する
+
+- 静的ビルドだけ確認したい場合:
+
+```bash
+docker run --rm -u 1000:1000 -v "$PWD:/app" -w /app ruby:3.3 bash -lc "./bin/build-site -d _site-local"
+```
+
+## Playwright CLI Verification
+
+- Playwright CLI の browser が未導入なら一度だけ入れる
+
+```bash
+playwright-cli install-browser chromium
+```
+
+- Docker でサイトを起動した状態でトップページを開く
+
+```bash
+playwright-cli -s=docs-check open http://127.0.0.1:4000
+```
+
+- 代表ページへ移動して確認する
+
+```bash
+playwright-cli -s=docs-check goto http://127.0.0.1:4000/docs/03-WINDOWS-DEVELOPMENT-SETUP/
+```
+
+- フルページのスクリーンショットを保存する
+
+```bash
+playwright-cli -s=docs-check screenshot --filename .playwright-cli/docs-check-home.png --full-page
+playwright-cli -s=docs-check screenshot --filename .playwright-cli/docs-check-dev-setup.png --full-page
+```
+
+- 終了後はブラウザセッションを閉じる
+
+```bash
+playwright-cli -s=docs-check close
+```
