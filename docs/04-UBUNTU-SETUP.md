@@ -16,8 +16,9 @@ WSL 上の Ubuntu に、開発で使う CLI とランタイムを入れる手順
 
 - Ubuntu 側で Git と GitHub CLI が使える
 - Node.js 開発に必要な基本パッケージが入っている
-- `fnm` のシェル初期化が済んでいる
+- fnm がインストール済みである
 - [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順が完了している
+- [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の Ubuntu 向け手順が完了している
 
 ## 1. パッケージ更新
 
@@ -61,13 +62,19 @@ sudo apt install -y curl unzip build-essential python3
 
 公式手順: https://github.com/Schniz/fnm
 
-インストール後、Bash では `.bashrc` に以下を追加する。
+fnm をインストールする。シェルの初期化（`eval "$(fnm env ...)"` の `.bashrc` 追加）は [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) で行う。
+
+## 6. シェル初期化設定
+
+[06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の手順を Ubuntu のターミナルで実行し、完了後このドキュメントに戻る。
+
+設定を反映するためにシェルを再読み込みする。
 
 ```bash
-eval "$(fnm env --use-on-cd --shell bash)"
+source ~/.bashrc
 ```
 
-## 6. 開発ツール共通設定
+## 7. 開発ツール共通設定
 
 vim が入っていない場合は先にインストールする。
 
@@ -77,28 +84,10 @@ sudo apt install -y vim
 
 [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順を実行し、完了後このドキュメントに戻る。
 
-## 7. Playwright ブラウザ依存パッケージ
+## 8. Playwright ブラウザ依存パッケージ
 
 Node.js インストール後に依存パッケージをインストールする。
 
 ```bash
 npx playwright install-deps
 ```
-
-## 8. grb（Bash 関数）
-
-マージ済みブランチを一括削除する関数。`.bashrc` に追加する。
-
-```bash
-grb() {
-  git switch main && git pull origin main && git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
-}
-```
-
-この方法は対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない実行環境ではそのまま使えないことがある。その場合は `git rb`（[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) で設定済み）を使う。
-
-### 注意
-
-- 既定ブランチが `main` ではないリポジトリでは、このままだと動かない
-- `git branch --merged main` は `main` にマージ済みのローカルブランチだけを削除する
-- 不安があれば `git branch --merged main` の出力を確認してから削除する

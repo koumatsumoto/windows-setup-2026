@@ -20,7 +20,9 @@ Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番
 | 1 | [docs/01-WINDOWS-CLEAN-INSTALL.md](docs/01-WINDOWS-CLEAN-INSTALL.md) | Windows 初期インストール、OOBE、アカウント固定、Windows Update |
 | 2 | [docs/02-WINDOWS-SETUP.md](docs/02-WINDOWS-SETUP.md) | 不要アプリ整理、Microsoft Store 更新、言語と Explorer の設定、Insider Program |
 | 3 | [docs/03-WINDOWS-DEVELOPMENT-SETUP.md](docs/03-WINDOWS-DEVELOPMENT-SETUP.md) | Windows 側アプリ導入、Git 設定、WSL と Ubuntu の準備 |
-| 4 | [docs/04-UBUNTU-SETUP.md](docs/04-UBUNTU-SETUP.md) | Ubuntu 側の Git、gh、fnm、Playwright、`grb` のセットアップ |
+| 4 | [docs/04-UBUNTU-SETUP.md](docs/04-UBUNTU-SETUP.md) | Ubuntu 側の Git、gh、fnm、Playwright のセットアップ |
+| — | [docs/05-DEV-TOOL-CONFIG.md](docs/05-DEV-TOOL-CONFIG.md) | Git・npm・pip の共通設定（03 と 04 から参照） |
+| — | [docs/06-SHELL-CONFIG.md](docs/06-SHELL-CONFIG.md) | .bashrc / .bash_profile の共通設定（03 と 04 から参照） |
 
 ## 依存関係
 

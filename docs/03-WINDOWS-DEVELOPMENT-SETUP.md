@@ -16,6 +16,8 @@ Windows 側で使うアプリを入れ、WSL と Ubuntu を開発用に使える
 ## このドキュメントの完了条件
 
 - Git、VS Code、Docker Desktop など Windows 側アプリが入っている
+- Windows Terminal の既定プロファイルが Git Bash に変更されている
+- [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の Windows 向け手順が完了している
 - [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Windows 向け手順が完了している
 - WSL と Ubuntu がインストール済みである
 - Ubuntu を初回起動し、Linux ユーザー作成まで終わっている
@@ -42,11 +44,50 @@ winget install -e --id 7zip.7zip
 winget upgrade --all
 ```
 
-## 2. 開発ツール共通設定
+## 2. Windows Terminal の Git Bash 設定
+
+Windows Terminal の既定プロファイルを Git Bash に変更する。
+
+### プロファイルの追加
+
+1. Windows Terminal を開く
+2. `Ctrl + ,` で設定画面を開く
+3. 左下の「JSON ファイルを開く」をクリックする
+4. `profiles.list` 配列に以下のプロファイルを追加する
+
+```json
+{
+    "name": "Git Bash",
+    "commandline": "C:\\Program Files\\Git\\bin\\bash.exe --login -i",
+    "icon": "C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico",
+    "startingDirectory": "%USERPROFILE%"
+}
+```
+
+### 既定プロファイルの変更
+
+設定画面の「スタートアップ」→「既定のプロファイル」で「Git Bash」を選択する。
+
+### bash.exe と git-bash.exe の違い
+
+| 実行ファイル | 動作 |
+| --- | --- |
+| `C:\Program Files\Git\bin\bash.exe` | Windows Terminal のタブ内で動作する |
+| `C:\Program Files\Git\git-bash.exe` | 独立したウィンドウ（MinTTY）で開く |
+
+Windows Terminal で使う場合は `bash.exe` を指定する。`git-bash.exe` を指定すると別ウィンドウが開き、Terminal のタブとして統合されない。
+
+`--login -i` を付けることでログインシェルとして起動し、`.bash_profile` が読み込まれるようになる。
+
+## 3. シェル初期化設定
+
+Git Bash で [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の手順を実行する。
+
+## 4. 開発ツール共通設定
 
 Git Bash で [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の手順を実行する。事前に `vim --version` で vim が利用可能なことを確認する。
 
-## 3. WSL インストール
+## 5. WSL インストール
 
 PowerShell を管理者で開いて実行する。
 
@@ -67,7 +108,7 @@ wsl --install -d Ubuntu
 - `wsl --install` は Ubuntu を既定のディストリビューションとして入れる
 - すでに WSL が入っていてヘルプが出る場合は `wsl --list --online` で利用可能なディストリビューションを確認する
 
-## 4. Ubuntu の初回起動
+## 6. Ubuntu の初回起動
 
 1. スタートメニューから `Ubuntu` を起動する
 2. 展開完了を待つ
@@ -75,7 +116,7 @@ wsl --install -d Ubuntu
 
 ここまで終わると、Ubuntu 側のセットアップを始められる。
 
-## 5. VS Code と WSL の連携
+## 7. VS Code と WSL の連携
 
 1. Windows 側で VS Code を起動する
 2. WSL 内でプロジェクトディレクトリに移動する
