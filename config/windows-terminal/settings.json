@@ -1,0 +1,89 @@
+{
+    "$help": "https://aka.ms/terminal-documentation",
+    "$schema": "https://aka.ms/terminal-profiles-schema",
+    "actions": [],
+    "copyFormatting": "none",
+    "copyOnSelect": false,
+    "defaultProfile": "{044974f9-f197-54a1-bc0e-e0853c9b521b}",
+    "experimental.detectURLs": true,
+    "experimental.scrollToChangeOpacity": false,
+    "experimental.scrollToZoom": false,
+    "focusFollowMouse": false,
+    "keybindings": [
+        {
+            "id": "Terminal.CopyToClipboard",
+            "keys": "ctrl+c"
+        },
+        {
+            "id": "Terminal.PasteFromClipboard",
+            "keys": "ctrl+v"
+        },
+        {
+            "id": "Terminal.FindText",
+            "keys": "ctrl+shift+f"
+        },
+        {
+            "id": "Terminal.DuplicatePaneAuto",
+            "keys": "alt+shift+d"
+        }
+    ],
+    "newTabMenu": [
+        {
+            "type": "remainingProfiles"
+        }
+    ],
+    "profiles": {
+        "defaults": {
+            "adjustIndistinguishableColors": "indexed",
+            "cursorShape": "filledBox",
+            "font": {
+                "face": "Consolas",
+                "size": 12,
+                "weight": "normal"
+            },
+            "intenseTextStyle": "bold",
+            "opacity": 100,
+            "padding": "8, 8, 8, 8",
+            "scrollbarState": "visible",
+            "useAcrylic": false
+        },
+        "list": [
+            {
+                "guid": "{044974f9-f197-54a1-bc0e-e0853c9b521b}",
+                "hidden": false,
+                "name": "Ubuntu",
+                "source": "Microsoft.WSL"
+            },
+            {
+                "commandline": "C:\\Program Files\\Git\\bin\\bash.exe --login -i",
+                "guid": "{d15b228a-05d7-50d1-8472-f60aaba86efc}",
+                "hidden": false,
+                "icon": "C:\\Program Files\\Git\\mingw64\\share\\git\\git-for-windows.ico",
+                "name": "Git Bash",
+                "startingDirectory": "C:\\work"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+                "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
+                "hidden": false,
+                "name": "Windows PowerShell"
+            },
+            {
+                "commandline": "%SystemRoot%\\System32\\cmd.exe",
+                "guid": "{0caa0dad-35be-5f56-a8ff-afceeeaa6101}",
+                "hidden": false,
+                "name": "コマンド プロンプト"
+            }
+        ]
+    },
+    "schemes": [],
+    "snapToGridOnResize": true,
+    "tabSwitcherMode": "inOrder",
+    "theme": "system",
+    "themes": [],
+    "trimBlockSelection": true,
+    "trimPaste": true,
+    "useAcrylicInTabRow": false,
+    "warning.largePaste": true,
+    "warning.multiLinePaste": "automatic"
+}
