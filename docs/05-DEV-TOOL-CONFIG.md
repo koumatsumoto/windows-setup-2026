@@ -38,12 +38,13 @@ git config --global core.excludesfile ~/.gitglobalignore
 git config --global alias.rb '!git switch main && git pull --ff-only origin main && git branch --merged main | grep -v '"'"'^[* ]*main$'"'"' | xargs -r git branch -d'
 ```
 
-`core.autocrlf` は OS ごとに異なる値を設定する。
+`core.autocrlf` は Windows / Ubuntu とも `input` にする。
 
-| OS | コマンド | 理由 |
-| --- | --- | --- |
-| Windows | `git config --global core.autocrlf true` | チェックアウト時に LF→CRLF、コミット時に CRLF→LF |
-| Ubuntu | `git config --global core.autocrlf input` | コミット時のみ CRLF→LF に正規化 |
+```sh
+git config --global core.autocrlf input
+```
+
+`core.autocrlf=true` はチェックアウト時に LF→CRLF へ変換し、shebang 付きスクリプト（`bin/*` 等）や Docker 配下のファイルを Git Bash / WSL / コンテナで壊すため使わない。`input` は作業ツリーを LF に保ちつつ、コミット時に紛れ込んだ CRLF を LF へ正規化する。リポジトリ側でも `.gitattributes`（`* text=auto eol=lf`）で改行を LF に固定し、各自の `core.autocrlf` 設定に依存しないようにする。
 
 ## 2. .gitglobalignore
 

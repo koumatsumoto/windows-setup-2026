@@ -1,0 +1,8 @@
+# Force LF on checkout for all text files so a Windows clone (even with
+# core.autocrlf=true) cannot rewrite LF->CRLF and corrupt the shebang of the
+# bin/* shell scripts or the .bashrc snippets this guide distributes.
+* text=auto eol=lf
+
+# Belt-and-suspenders for the executable scripts that rely on a clean shebang.
+bin/* text eol=lf
+*.sh text eol=lf
