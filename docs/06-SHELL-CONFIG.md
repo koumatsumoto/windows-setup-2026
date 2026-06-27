@@ -210,9 +210,11 @@ wopen() {
   # 入力を Linux パスへ正規化する（以降の解決・存在確認は Linux パスで行う）
   case "$input" in
     file://*)
-      # file:// URL。スキームを外し、空白等の percent-encoding を復号する（%XX -> \xXX -> printf %b）
+      # file:// URL。スキームを外し percent-encoding を復号する
       rest="${input#file://}"
-      rest="$(printf '%b' "${rest//%/\\x}")"
+      # %XX（2桁hex）だけを復号する。%XX でない % と入力中の \ はそのまま扱う
+      rest="$(printf '%s' "$rest" | sed -e 's/\\/\\\\/g' -e 's/%\([0-9A-Fa-f]\{2\}\)/\\x\1/g')"
+      rest="$(printf '%b' "$rest")"
       case "$rest" in
         /[A-Za-z]:*)  # file:///C:/... : ドライブ形式。先頭 / を外して Windows パスへ変換する
           win="${rest#/}"
@@ -312,5 +314,6 @@ BASHRC
 - 常に Explorer で開く。ファイルを渡すと、そのファイルを含むフォルダを開いてファイルを選択表示し、ディレクトリを渡すとそのフォルダを開く。`open` と異なりブラウザは起動しない（`.html` も Explorer で選択表示する）
 - ファイル共有のため「対象の場所をエクスプローラで開く」用途に使う
 - `open` と同じ Linux 形式・Windows 形式のパスに加え、`file://` URL を受け付ける。ブラウザのアドレスバーに出る `file://wsl.localhost/<distro>/...`（WSL）や `file:///C:/...`（Windows）をそのまま渡せる
-- `file://` URL の空白等は percent-encoding（`%20` など）で渡されるため、内部で復号してから解決する
+- `file://` URL の空白等は percent-encoding（`%20` など）で渡されるため、`%XX`（2桁 hex）形式を内部で復号してから解決する
+- 信頼できないホストの `file://` URL（`file://<外部ホスト>/...`）は開かない。ホスト部が UNC（`\\host\...`）として解決され、Windows がそのホストへ接続・認証（資格情報の送出）を試みうる
 - WSL / Git Bash 以外の環境では、`wopen` 実行時に「未対応」と表示して何もしない
