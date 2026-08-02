@@ -18,9 +18,10 @@ Git Bash（Windows）と Ubuntu（WSL）で共通のシェル初期化ファイ�
 - `.bash_profile` が `.bashrc` を読み込む構成になっている
 - `.bashrc` にヒストリ設定、エディタ設定、エイリアスが入っている
 - fnm の初期化が `.bashrc` に含まれている（fnm インストール済みの場合）
-- grb 関数が `.bashrc` に含まれている
+- grb 関数と sau 関数が `.bashrc` に含まれている
 - `open` 関数が `.bashrc` に含まれている（WSL / Git Bash 両対応）
 - `wopen` 関数が `.bashrc` に含まれている（WSL / Git Bash 両対応）
+- WSL の場合: wsl-browser / msedit スクリプトと BROWSER / EDITOR 環境変数が設定されている
 
 ## 1. .bash\_profile
 
@@ -113,6 +114,15 @@ fi
 # ---------------------
 grb() {
   git switch main && git pull origin main && git branch --merged main | grep -v "^[* ]*main$" | xargs -r git branch -d
+}
+
+# ---------------------
+# sau (apt アップデート)
+# ---------------------
+sau() {
+  sudo apt update &&
+  sudo apt full-upgrade -y &&
+  sudo apt autoremove -y
 }
 
 # ---------------------
@@ -296,7 +306,7 @@ BASHRC
 
 - 既定ブランチが `main` ではないリポジトリでは動作しない
 - `git branch --merged main` はローカルブランチのみを対象とする
-- 対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない環境では使えない。その場合は `git rb`（[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) で設定済み）を使う
+- 対話シェルの初期化に依存するため、Codex CLI のように `.bashrc` を読まない環境では使えない
 
 ### fnm の初期化
 
@@ -317,3 +327,78 @@ BASHRC
 - `file://` URL の空白等は percent-encoding（`%20` など）で渡されるため、`%XX`（2桁 hex）形式を内部で復号してから解決する
 - 信頼できないホストの `file://` URL（`file://<外部ホスト>/...`）は開かない。ホスト部が UNC（`\\host\...`）として解決され、Windows がそのホストへ接続・認証（資格情報の送出）を試みうる
 - WSL / Git Bash 以外の環境では、`wopen` 実行時に「未対応」と表示して何もしない
+
+## 3. WSL 固有: ブラウザ・エディタ連携
+
+WSL（Ubuntu）でのみ必要な設定。Git Bash（Windows）では不要。
+
+WSLg により `DISPLAY` が有効なため、`xdg-open` が Linux 側のブラウザやエディタを選んでしまう。以下の設定で、URL とファイルの表示を Windows 側に委譲する。
+
+### wsl-browser スクリプト
+
+WSL 内の URL を Windows の既定ブラウザで開くランチャ。
+
+```bash
+mkdir -p ~/.local/bin
+cat > ~/.local/bin/wsl-browser <<'EOF'
+#!/bin/sh
+target="$1"
+[ -z "$target" ] && exit 1
+case "$target" in
+  http://* | https://*) explorer.exe "$target" >/dev/null 2>&1 ;;
+  *) explorer.exe "$(wslpath -w "$target")" >/dev/null 2>&1 ;;
+esac
+EOF
+chmod +x ~/.local/bin/wsl-browser
+```
+
+`.bashrc` に環境変数を追加する。
+
+```bash
+echo 'export BROWSER="$HOME/.local/bin/wsl-browser"' >> ~/.bashrc
+```
+
+### xdg 既定ブラウザの設定
+
+`xdg-open` が `wsl-browser` を使うようにする。
+
+```bash
+mkdir -p ~/.local/share/applications
+cat > ~/.local/share/applications/wsl-browser.desktop <<'EOF'
+[Desktop Entry]
+Type=Application
+Name=Windows Default Browser
+Exec=/home/kou/.local/bin/wsl-browser %u
+Terminal=false
+NoDisplay=true
+MimeType=x-scheme-handler/unknown;x-scheme-handler/about;x-scheme-handler/http;x-scheme-handler/https;text/html;
+EOF
+xdg-settings set default-web-browser wsl-browser.desktop
+```
+
+### msedit スクリプト
+
+Windows 側の Microsoft Edit（`edit.exe`）を WSL から起動するラッパ。[03. Windows 開発環境構築]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) で `Microsoft.Edit` をインストール済みであること。
+
+```bash
+cat > ~/.local/bin/msedit <<'EOF'
+#!/bin/sh
+exec edit.exe "$(wslpath -w "$1")"
+EOF
+chmod +x ~/.local/bin/msedit
+```
+
+`.bashrc` の `EDITOR` / `VISUAL` を `msedit` に変更する。
+
+```bash
+sed -i 's/^export EDITOR=vim$/export EDITOR=msedit/' ~/.bashrc
+sed -i 's/^export VISUAL=vim$/export VISUAL=msedit/' ~/.bashrc
+```
+
+> Git の `core.editor` は `vim` のままにする（[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }})）。`EDITOR` / `VISUAL` はシェル全般のデフォルトエディタ、`core.editor` は Git 専用の設定として使い分ける。
+
+### 設定の反映
+
+```bash
+source ~/.bashrc
+```

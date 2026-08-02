@@ -35,7 +35,6 @@ git config --global pull.ff only
 git config --global rebase.autoStash true
 git config --global core.editor vim
 git config --global core.excludesfile ~/.gitglobalignore
-git config --global alias.rb '!git switch main && git pull --ff-only origin main && git branch --merged main | grep -v '"'"'^[* ]*main$'"'"' | xargs -r git branch -d'
 ```
 
 `core.autocrlf` は Windows / Ubuntu とも `input` にする。
@@ -45,6 +44,16 @@ git config --global core.autocrlf input
 ```
 
 `core.autocrlf=true` はチェックアウト時に LF→CRLF へ変換し、shebang 付きスクリプト（`bin/*` 等）や Docker 配下のファイルを Git Bash / WSL / コンテナで壊すため使わない。`input` は作業ツリーを LF に保ちつつ、コミット時に紛れ込んだ CRLF を LF へ正規化する。リポジトリ側でも `.gitattributes`（`* text=auto eol=lf`）で改行を LF に固定し、各自の `core.autocrlf` 設定に依存しないようにする。
+
+### Git の認証設定
+
+GitHub CLI をインストール済みであれば、Git の credential helper を `gh` に委任する。Windows・Ubuntu 両方で実行する。
+
+```sh
+gh auth setup-git
+```
+
+これにより `git push` / `git pull` 時の認証が `gh` のトークン経由で行われる。WSL 側では [04. Ubuntu 側の開発環境セットアップ]({{ '/docs/04-UBUNTU-SETUP/' | relative_url }}) の `gh auth login` 完了後に実行する。
 
 ## 2. .gitglobalignore
 
@@ -79,6 +88,16 @@ node_modules/
 .nuxt/
 .svelte-kit/
 dist/
+
+# AI coding tools
+.claude/settings.local.json
+.claude/worktrees/
+.plan/
+.kaizen/
+
+# Playwright
+.playwright-cli/
+.playwright-mcp/
 EOF
 ```
 

@@ -89,6 +89,8 @@ compose は生成先を `_site-local` に固定して、既存 `_site/` の権�
 | 4 | [docs/04-UBUNTU-SETUP.md](docs/04-UBUNTU-SETUP.md) | Ubuntu 側の Git、gh、fnm、Playwright のセットアップ |
 | — | [docs/05-DEV-TOOL-CONFIG.md](docs/05-DEV-TOOL-CONFIG.md) | Git・npm・pip の共通設定（03 と 04 から参照） |
 | — | [docs/06-SHELL-CONFIG.md](docs/06-SHELL-CONFIG.md) | .bashrc / .bash_profile の共通設定（03 と 04 から参照） |
+| — | [docs/07-WINDOWS-TERMINAL.md](docs/07-WINDOWS-TERMINAL.md) | Windows Terminal の管理用設定（03 の後に参照） |
+| — | [docs/08-AI-CODING-TOOLS.md](docs/08-AI-CODING-TOOLS.md) | AI コーディング CLI ツールのセットアップ（04 の後に参照） |
 
 ## 依存関係
 
