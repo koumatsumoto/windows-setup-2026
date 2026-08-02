@@ -18,11 +18,12 @@ Windows 側で使うアプリを入れ、WSL と Ubuntu を開発用に使える
 ## このドキュメントの完了条件
 
 - Git、VS Code、Docker Desktop など Windows 側アプリが入っている
-- Windows Terminal の既定プロファイルが Git Bash に変更されている
+- Windows Terminal の既定プロファイルが Ubuntu（WSL）になっている
 - [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の Windows 向け手順が完了している
 - [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Windows 向け手順が完了している
 - WSL と Ubuntu がインストール済みである
 - Ubuntu を初回起動し、Linux ユーザー作成まで終わっている
+- Docker Desktop の WSL 統合が有効になっている
 - VS Code と WSL の連携が完了している
 
 ## 1. winget でアプリインストール
@@ -38,7 +39,20 @@ winget install -e --id Oracle.MySQLWorkbench
 winget install -e --id Logitech.GHUB
 winget install -e --id Discord.Discord
 winget install -e --id 7zip.7zip
+winget install -e --id Microsoft.PowerToys
+winget install -e --id Microsoft.Edit
+winget install -e --id GitHub.cli
+winget install -e --id Schniz.fnm
+winget install -e --id Python.Python.3.14
 ```
+
+| winget ID | 用途 |
+| --- | --- |
+| Microsoft.PowerToys | ウィンドウ管理（FancyZones）、ランチャー（PowerToys Run）等 |
+| Microsoft.Edit | ターミナル用エディタ。WSL 側の `msedit` スクリプトから参照する |
+| GitHub.cli | Windows 側からの GitHub CLI 操作（`gh`） |
+| Schniz.fnm | Windows 側の Node.js バージョン管理 |
+| Python.Python.3.14 | Windows 側の Python ランタイム |
 
 ### すべてのアプリを更新
 
@@ -46,11 +60,11 @@ winget install -e --id 7zip.7zip
 winget upgrade --all
 ```
 
-## 2. Windows Terminal の Git Bash 設定
+## 2. Windows Terminal の設定
 
-Windows Terminal の既定プロファイルを Git Bash に変更する。
+既定プロファイルを Ubuntu（WSL）にし、Git Bash プロファイルを追加する。詳細は [07. Windows Terminal 設定]({{ '/docs/07-WINDOWS-TERMINAL/' | relative_url }}) を参照。
 
-### プロファイルの追加
+### Git Bash プロファイルの追加
 
 1. Windows Terminal を開く
 2. `Ctrl + ,` で設定画面を開く
@@ -66,9 +80,9 @@ Windows Terminal の既定プロファイルを Git Bash に変更する。
 }
 ```
 
-### 既定プロファイルの変更
+### 既定プロファイルの確認
 
-設定画面の「スタートアップ」→「既定のプロファイル」で「Git Bash」を選択する。
+設定画面の「スタートアップ」→「既定のプロファイル」で「Ubuntu」が選択されていることを確認する。WSL インストール後は Ubuntu が既定になる。
 
 ### bash.exe と git-bash.exe の違い
 
@@ -118,7 +132,26 @@ wsl --install -d Ubuntu
 
 ここまで終わると、Ubuntu 側のセットアップを始められる。
 
-## 7. VS Code と WSL の連携
+## 7. Docker Desktop の WSL 統合
+
+Docker Desktop が WSL2 バックエンドで動作するように設定する。
+
+1. Docker Desktop を起動する
+2. Settings（歯車アイコン）→ **Resources** → **WSL Integration** を開く
+3. 「Enable integration with my default WSL distro」を有効にする
+4. 一覧から Ubuntu のトグルを有効にする
+5. **Apply & Restart** をクリックする
+
+WSL 内で確認する。
+
+```bash
+docker --version
+docker compose version
+```
+
+Docker CLI は `/mnt/wsl/docker-desktop/cli-tools/` 経由で WSL 内に提供される。apt での Docker Engine インストールは不要。
+
+## 8. VS Code と WSL の連携
 
 1. Windows 側で VS Code を起動する
 2. WSL 内でプロジェクトディレクトリに移動する

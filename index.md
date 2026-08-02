@@ -24,6 +24,8 @@ Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番
 | 4 | [04. Ubuntu 側の開発環境セットアップ]({{ '/docs/04-UBUNTU-SETUP/' | relative_url }}) | Ubuntu 側の Git、gh、fnm、Playwright のセットアップ |
 | — | [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) | Git・npm・pip の共通設定（03 と 04 から参照） |
 | — | [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) | .bashrc / .bash_profile の共通設定（03 と 04 から参照） |
+| — | [07. Windows Terminal 設定]({{ '/docs/07-WINDOWS-TERMINAL/' | relative_url }}) | Windows Terminal の管理用設定（03 の後に参照） |
+| — | [08. AI コーディングツール]({{ '/docs/08-AI-CODING-TOOLS/' | relative_url }}) | AI コーディング CLI ツールのセットアップ（04 の後に参照） |
 
 ## 依存関係
 
