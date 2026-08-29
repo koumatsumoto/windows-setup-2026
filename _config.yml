@@ -1,5 +1,5 @@
 title: windows-setup-2026
-description: Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番で構築するための手順書
+description: 必要最小限の Windows 11 と WSL 開発環境を再構築するための手順書
 lang: ja
 timezone: Asia/Tokyo
 markdown: kramdown

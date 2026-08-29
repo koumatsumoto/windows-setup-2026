@@ -5,31 +5,32 @@ nav_hidden: true
 
 # Windows Setup 2026
 
-Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番で構築するための手順書です。
+最新安定版の日本語 Windows 11 を基準に、必要最小限の開発環境を復旧する手順です。判断を減らすため、必須手順は次の5段階だけにしています。
 
-## セットアップの流れ
+## 必須セットアップ
 
-1. Windows をクリーンインストールする
-2. Windows の基本設定を行う
-3. Windows 側の開発環境と WSL をセットアップする
-4. Ubuntu 側の CLI とランタイムをセットアップする
+| 段階 | 手順 | 完了する状態 |
+| --- | --- | --- |
+| 1 | [Windows 11 と `C:\Users\kou`]({{ '/docs/01-WINDOWS-CLEAN-INSTALL/' | relative_url }}) | 日本語版 Windows 11 と固定したプロファイルパス |
+| 2 | [日本語入力と Windows 設定]({{ '/docs/02-WINDOWS-SETUP/' | relative_url }}) | IME、Explorer、OneDrive を意図した状態にする |
+| 3 | [Windows アプリ・WSL・Docker]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) | 必須アプリ、WSL 2、Ubuntu 26.04 LTS、Docker / VS Code 連携 |
+| 4 | [WSL 開発環境]({{ '/docs/04-UBUNTU-SETUP/' | relative_url }}) | Git / gh、Node.js LTS、uv、2種類の Playwright 用途 |
+| 5 | [AI コーディングツールと完了確認]({{ '/docs/08-AI-CODING-TOOLS/' | relative_url }}) | Codex / Claude Code の導入・認証と全体検証 |
 
-## インデックス
+## 復旧完了条件
 
-| 順番 | ドキュメント | 役割 |
-| ---- | ------------ | ---- |
-| 1 | [01. Windows 11 クリーンインストール]({{ '/docs/01-WINDOWS-CLEAN-INSTALL/' | relative_url }}) | Windows 初期インストール、OOBE、アカウント固定、Windows Update |
-| 2 | [02. Windows 設定]({{ '/docs/02-WINDOWS-SETUP/' | relative_url }}) | 不要アプリ整理、Microsoft Store 更新、言語と Explorer の設定、Insider Program |
-| 3 | [03. Windows 開発環境構築]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) | Windows 側アプリ導入、Git 設定、WSL と Ubuntu の準備 |
-| 4 | [04. Ubuntu 側の開発環境セットアップ]({{ '/docs/04-UBUNTU-SETUP/' | relative_url }}) | Ubuntu 側の Git、gh、fnm、Playwright のセットアップ |
-| — | [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) | Git・npm・pip の共通設定（03 と 04 から参照） |
-| — | [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) | .bashrc / .bash_profile の共通設定（03 と 04 から参照） |
-| — | [07. Windows Terminal 設定]({{ '/docs/07-WINDOWS-TERMINAL/' | relative_url }}) | Windows Terminal の管理用設定（03 の後に参照） |
-| — | [08. AI コーディングツール]({{ '/docs/08-AI-CODING-TOOLS/' | relative_url }}) | AI コーディング CLI ツールのセットアップ（04 の後に参照） |
+- Windows は安定版で、Insider Program に参加していない。
+- Windows プロファイルは `C:\Users\kou`、既知のフォルダーの実パスは `Documents`、`Desktop`、`Downloads` の英語名である。
+- 日本語表示・地域・システムロケール・日本語キーボードと、個人用 IME キー設定が復旧している。
+- OneDrive はアプリを残し、未サインイン、フォルダーバックアップ無効、自動起動無効である。
+- Windows 側は VS Code、Docker Desktop、Chrome、PowerToys、7-Zip のみをこのガイドで導入する。
+- WSL 2 の `Ubuntu-26.04` で Git / GitHub、Node.js / TypeScript、Python / uv、Docker、Playwright、Codex、Claude Code が使える。
+- Playwright Test はプロジェクトの依存と lockfile で管理し、AI エージェント用 `playwright-cli` だけをグローバル導入する。
 
-## 依存関係
+## 設定リファレンス
 
-- 手順 2 は手順 1 の完了後に進む
-- 手順 3 は手順 2 の完了後に進む
-- 手順 4 は手順 3 で Ubuntu の初回起動まで終えてから進む
-- Docker Desktop は Windows 側でインストールし、WSL バックエンドを使う前提で運用する
+必須経路に含めない補足です。必要になった場合だけ参照します。
+
+- [Git の最小設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }})
+- [管理対象のシェル初期化]({{ '/docs/06-SHELL-CONFIG/' | relative_url }})
+- [Windows Terminal の最小設定]({{ '/docs/07-WINDOWS-TERMINAL/' | relative_url }})

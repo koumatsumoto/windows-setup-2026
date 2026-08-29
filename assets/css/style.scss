@@ -295,6 +295,16 @@ figure.highlight {
   padding: 0;
 }
 
+.side-nav__group {
+  color: var(--text-subtle);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin: 1rem 0 0.35rem;
+  padding: 0 0.75rem;
+  text-transform: uppercase;
+}
+
 .side-nav__item + .side-nav__item {
   margin-top: 0.2rem;
 }

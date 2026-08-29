@@ -1,58 +1,26 @@
 ---
-title: 07. Windows Terminal 設定
+title: Windows Terminal の最小設定
 permalink: /docs/07-WINDOWS-TERMINAL/
-nav_order: 70
-nav_label: 07. Windows Terminal 設定
+nav_order: 130
+nav_label: Windows Terminal の最小設定
+nav_section: reference
 ---
 
-# 07. Windows Terminal 設定
+# Windows Terminal の最小設定
 
-Codex CLI と Claude Code を WSL Ubuntu と Windows ホストの Git Bash で使うための Windows Terminal 設定。
+Windows Terminal が生成・更新する `settings.json` 全体は置換しません。必要な設定だけを画面から変更します。
 
-管理用コピーは `config/windows-terminal/settings.json` に置く。実機の設定ファイルは次の場所にある。
+## 推奨する設定
 
-```powershell
-$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json
-```
+1. Windows Terminal を開き、`Ctrl + ,` で設定を開く。
+2. スタートアップ → 既定のプロファイルで `Ubuntu-26.04` を選ぶ。
+3. 操作 → 複数行の貼り付け警告と大量テキストの貼り付け警告を有効にする。
+4. コピーの書式はプレーンテキストにする。
 
-## 方針
+AI が生成した複数行コマンドを意図せず一括実行しないことが目的です。追加プロファイル、フォント、配色、キーバインドは必須設定にしません。
 
-- 既定プロファイルは WSL Ubuntu にする。
-- `Ctrl+C` と `Ctrl+V` は Terminal 側のコピー/ペーストに割り当てる。選択がない `Ctrl+C` はシェルへ送られる。
-- 複数行ペーストと大きなペーストの警告は有効にして、AI が生成したコマンドを誤実行しにくくする。
-- コピーはプレーンテキストのみ。ANSI 装飾やリッチテキストを混ぜない。
-- 透明化と Acrylic は無効にして、長時間のCLI作業で文字の視認性と描画の安定性を優先する。
-- `Ctrl` + ホイールのフォントサイズ変更と、`Ctrl+Shift` + ホイールの透明度変更は無効にする。
-- Git Bash は `C:\Program Files\Git\bin\bash.exe --login -i` で起動する。
-- フォントは Git Bash 側の表示に合わせて `Consolas` を使う。
+## 確認
 
-## 補足
+Windows Terminal を開き直し、新しいタブが `Ubuntu-26.04` になることを確認します。複数行テキストを貼り付け、実行前に警告が出ることも確認します。
 
-Windows Terminal の実機設定は、ペースト警告を保存時に `warning.largePaste` と `warning.multiLinePaste` へ正規化することがある。公式ドキュメントでは `largePasteWarning` と `multiLinePasteWarning` も説明されているが、このリポジトリでは実機が保存した形式に合わせる。
-
-## 現状確認
-
-```powershell
-wsl.exe -l -v
-Get-Command wt.exe, git.exe
-Get-Content -Raw "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" | ConvertFrom-Json
-```
-
-## 適用
-
-`config/windows-terminal/settings.json` を実機の `LocalState\settings.json` に反映する。
-
-```powershell
-$source = Resolve-Path .\config\windows-terminal\settings.json
-$target = Join-Path $env:LOCALAPPDATA 'Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json'
-Copy-Item $target "$target.bak" -Force
-Copy-Item $source $target -Force
-```
-
-## 検証
-
-```powershell
-Get-Content -Raw "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" | ConvertFrom-Json | Out-Null
-```
-
-Windows Terminal を開き直し、既定タブが Ubuntu で起動すること、Git Bash がメニューに表示されること、`Alt+Shift+D` でペイン複製できることを確認する。
+[03. Windows アプリ・WSL・Docker]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) に戻ります。

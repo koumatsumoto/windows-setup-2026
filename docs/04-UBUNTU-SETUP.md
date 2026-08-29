@@ -1,202 +1,125 @@
 ---
-title: 04. Ubuntu 側の開発環境セットアップ
+title: 04. WSL 開発環境
 permalink: /docs/04-UBUNTU-SETUP/
 nav_order: 40
-nav_label: 04. Ubuntu 側の開発環境セットアップ
+nav_label: 04. WSL 開発環境
+nav_section: setup
 ---
 
-# 04. Ubuntu 側の開発環境セットアップ
+# 04. WSL 開発環境
 
-WSL 上の Ubuntu に、開発で使う CLI とランタイムを入れる手順。
+`Ubuntu-26.04` に Git / GitHub、Node.js / TypeScript、Python / uv、Playwright の最小基盤を導入します。
 
-## 前提
+## 完了条件
 
-- [03. Windows 開発環境構築]({{ '/docs/03-WINDOWS-DEVELOPMENT-SETUP/' | relative_url }}) が完了している
-- Ubuntu を起動し、Linux ユーザーが作成済みである
+- Git / GitHub CLI と必要最小限の OS パッケージが使える。
+- fnm が Node.js LTS を管理し、`node` / `npm` が使える。
+- Python はプロジェクトごとに uv で管理できる。
+- AI エージェント用 `playwright-cli` と専用 Chromium が使える。
+- Playwright Test とそのブラウザーをグローバルには導入していない。
 
-## このドキュメントの完了条件
+## 1. WSL 基盤を導入する
 
-- Ubuntu 側で Git と GitHub CLI が使える
-- systemd が有効になっている
-- Node.js 開発に必要な基本パッケージが入っている
-- fnm がインストール済みである
-- [05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順が完了している
-- [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の Ubuntu 向け手順が完了している
-
-## 1. パッケージ更新
+最初の1回だけ、Windows 側で展開した ZIP のスクリプトを使います。内容を確認し、dry-run、実行の順に進めます。
 
 ```bash
-sudo apt update -y && sudo apt full-upgrade -y
+cd /mnt/c/Users/kou/Downloads/windows-setup-2026/windows-setup-2026-main
+./scripts/wsl/install.sh --dry-run
+./scripts/wsl/install.sh
+exec bash
 ```
 
-## 2. systemd 有効化
+スクリプトは Ubuntu 26.04 以外では停止します。既存の `.bashrc` 全体は置換せず、管理対象フラグメントを1行だけ source します。変更前の `.bashrc` は初回だけ日時付きでバックアップします。Docker Desktop 連携のために `/etc/wsl.conf` や systemd は変更しません。
 
-WSL で systemd を有効にする。Docker Desktop の WSL 統合やサービス管理に必要。
+## 2. リポジトリを WSL へ clone する
+
+Git の導入後は Windows の ZIP 展開先ではなく、Linux ファイルシステム内で作業します。
 
 ```bash
-sudo tee /etc/wsl.conf > /dev/null <<'EOF'
-[boot]
-systemd=true
-EOF
+mkdir -p ~/work
+cd ~/work
+git clone https://github.com/koumatsumoto/windows-setup-2026.git
+cd windows-setup-2026
 ```
 
-設定を反映するために Windows 側で WSL を再起動する。
+以後のコマンドはこの WSL 側コピーで実行します。
 
-```powershell
-wsl --shutdown
-```
+## 3. Git と GitHub を設定する
 
-Ubuntu を再起動し、systemd が動作していることを確認する。
-
-```bash
-systemctl list-units --type=service --state=running | head
-```
-
-## 3. Git インストール
-
-```bash
-sudo apt install -y git
-```
-
-## 4. GitHub CLI（gh）
-
-公式手順: https://github.com/cli/cli/blob/trunk/docs/install_linux.md
-
-インストール後に認証する。
+[Git の最小設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) で名前とメールアドレスを設定します。続いて認証します。
 
 ```bash
 gh auth login
 gh auth setup-git
 ```
 
-## 5. Node.js 開発の基本パッケージ
+トークン、SSH 鍵、認証済み設定はこのリポジトリへ保存しません。
 
-`fnm` の導入とネイティブモジュールのビルドに必要なパッケージ:
+## 4. Node.js / TypeScript
 
-```bash
-sudo apt install -y curl unzip build-essential python3
-```
-
-| パッケージ      | 用途                                         |
-| --------------- | -------------------------------------------- |
-| curl            | `fnm` インストールスクリプトのダウンロード   |
-| unzip           | `fnm` パッケージの展開                       |
-| build-essential | ネイティブモジュール（node-gyp）のコンパイル |
-| python3         | node-gyp 10+ で必須                          |
-
-## 6. Node.js バージョン管理（fnm）
-
-公式手順: https://github.com/Schniz/fnm
-
-fnm をインストールする。シェルの初期化（`eval "$(fnm env ...)"` の `.bashrc` 追加）は [06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) で行う。
-
-## 7. シェル初期化設定
-
-[06. シェル初期化設定]({{ '/docs/06-SHELL-CONFIG/' | relative_url }}) の手順を Ubuntu のターミナルで実行し、完了後このドキュメントに戻る。
-
-設定を反映するためにシェルを再読み込みする。
+基盤スクリプトは Node.js LTS を導入して既定にします。各プロジェクトは `.node-version` または `.nvmrc` と lockfile を正本にします。
 
 ```bash
-source ~/.bashrc
+node --version
+node -p 'process.release.lts'
+npm --version
 ```
 
-## 8. Node.js のインストール
+2行目が `null` ではなく LTS のコードネームを返すことを確認します。TypeScript などは各プロジェクトの `devDependencies` に追加し、グローバル導入しません。
 
-Playwright や `npx` を使う前に、`fnm` で Node.js を 1 系列インストールして有効化する。
+## 5. Python / uv
+
+システム Python やグローバル pip を開発用パッケージで変更しません。新しいプロジェクトでは次のように uv の設定と lockfile を使います。
 
 ```bash
-fnm install --lts
-fnm default lts-latest
-node -v
-npx -v
+uv init example-python
+cd example-python
+uv python pin 3.14
+uv add --dev pytest
+uv run pytest
 ```
 
-## 9. 開発ツール共通設定
+Python バージョンは各プロジェクトで決めます。OS セットアップでは特定の Python 系列を先回りして導入しません。
 
-vim が入っていない場合は先にインストールする。
+## 6. Playwright の用途を分ける
+
+### プロジェクトの E2E テスト
+
+Playwright Test は対象 Node.js プロジェクトでだけ追加します。
 
 ```bash
-sudo apt install -y vim
+npm init playwright@latest
+npx playwright install --with-deps
+npx playwright test
 ```
 
-[05. 開発ツール共通設定]({{ '/docs/05-DEV-TOOL-CONFIG/' | relative_url }}) の Ubuntu 向け手順を実行し、完了後このドキュメントに戻る。
+`package.json` と lockfile を commit し、必要なブラウザーをそのプロジェクトで取得します。
 
-## 10. Playwright ブラウザ依存パッケージ
+### AI エージェントのブラウザー操作
 
-Node.js インストール後に依存パッケージをインストールする。
+基盤スクリプトは `@playwright/cli@latest` と CLI 用 Chromium をグローバル導入します。生成 skill は固定保存せず、Codex / Claude Code から `playwright-cli --help` を読ませます。
 
 ```bash
-npx playwright install-deps
-npx playwright install
+playwright-cli --version
+playwright-cli --help
+playwright-cli -s=smoke open about:blank
+playwright-cli -s=smoke close
 ```
 
-## 11. 追加の開発ツール
+特定プロジェクトで生成 skill が必要になった場合だけ、その時点の CLI で `playwright-cli install --skills` を実行します。
 
-必須ではないが、開発で使うツールをまとめて入れる。
-
-### Rust
-
-公式手順: https://rustup.rs
+## 7. read-only 検証
 
 ```bash
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source "$HOME/.cargo/env"
-rustc --version
+./scripts/wsl/verify.sh
 ```
 
-### uv（Python パッケージ管理）
-
-公式手順: https://docs.astral.sh/uv/
+Docker daemon とブラウザーの起動を含む動作確認は、明示的に次を実行します。一時セッションは終了時に閉じます。
 
 ```bash
-curl -LsSf https://astral.sh/uv/install.sh | sh
-source "$HOME/.local/bin/env"
-uv --version
+./scripts/wsl/verify-runtime.sh
 ```
 
-### Google Cloud SDK
+## 次に読む
 
-公式手順: https://cloud.google.com/sdk/docs/install?hl=ja
-
-```bash
-curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /usr/share/keyrings/cloud.google.gpg
-echo "deb [signed-by=/usr/share/keyrings/cloud.google.gpg] https://packages.cloud.google.com/apt cloud-sdk main" | sudo tee /etc/apt/sources.list.d/google-cloud-sdk.list
-sudo apt update && sudo apt install -y google-cloud-cli
-gcloud --version
-```
-
-### kubectl
-
-```bash
-curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
-echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.32/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
-sudo apt update && sudo apt install -y kubectl
-kubectl version --client
-```
-
-### corepack（pnpm / yarn）
-
-Node.js に同梱されている corepack を有効化する。
-
-```bash
-corepack enable
-pnpm --version
-```
-
-### wrangler（Cloudflare Workers）
-
-```bash
-npm install -g wrangler
-wrangler --version
-```
-
-### Google Chrome（WSL 内ブラウザテスト用）
-
-```bash
-wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-sudo apt install -y /tmp/google-chrome.deb
-rm /tmp/google-chrome.deb
-google-chrome --version
-```
-
-Playwright のブラウザテストでシステム Chrome を使う場合に必要。
+[05. AI コーディングツールと完了確認]({{ '/docs/08-AI-CODING-TOOLS/' | relative_url }}) に進みます。
