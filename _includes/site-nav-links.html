@@ -1,12 +1,21 @@
 {% assign theme = site.theme_settings %}
 {% assign docs_path_prefix = theme.docs_path_prefix | default: '/docs/' %}
 {% assign home_nav_label = theme.home_nav_label | default: 'Home' %}
-{% assign nav_pages = site.pages | where_exp: "item", "item.url contains docs_path_prefix" | where_exp: "item", "item.nav_hidden != true" | sort: "nav_order" %}
+{% assign nav_pages = site.pages | where_exp: "item", "item.url contains docs_path_prefix" | where_exp: "item", "item.nav_hidden != true" %}
+{% assign setup_pages = nav_pages | where: "nav_section", "setup" | sort: "nav_order" %}
+{% assign reference_pages = nav_pages | where: "nav_section", "reference" | sort: "nav_order" %}
 <ul class="side-nav__list">
   <li class="side-nav__item">
     <a href="{{ '/' | relative_url }}" {% if page.url == '/' %}aria-current="page"{% endif %}>{{ home_nav_label }}</a>
   </li>
-  {% for nav_page in nav_pages %}
+  <li class="side-nav__group" aria-hidden="true">必須セットアップ</li>
+  {% for nav_page in setup_pages %}
+    <li class="side-nav__item">
+      <a href="{{ nav_page.url | relative_url }}" {% if nav_page.url == page.url %}aria-current="page"{% endif %}>{{ nav_page.nav_label | default: nav_page.title }}</a>
+    </li>
+  {% endfor %}
+  <li class="side-nav__group" aria-hidden="true">リファレンス</li>
+  {% for nav_page in reference_pages %}
     <li class="side-nav__item">
       <a href="{{ nav_page.url | relative_url }}" {% if nav_page.url == page.url %}aria-current="page"{% endif %}>{{ nav_page.nav_label | default: nav_page.title }}</a>
     </li>

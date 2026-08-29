@@ -1,104 +1,67 @@
 ---
-title: 01. Windows 11 クリーンインストール
+title: 01. Windows 11 とユーザープロファイル
 permalink: /docs/01-WINDOWS-CLEAN-INSTALL/
 nav_order: 10
-nav_label: 01. Windows 11 クリーンインストール
+nav_label: 01. Windows 11 とユーザー
+nav_section: setup
 ---
 
-# 01. Windows 11 クリーンインストール
+# 01. Windows 11 と `C:\Users\kou`
 
-Windows を初期状態から入れ直し、Windows Update の適用まで完了させる手順。
+最新安定版の日本語 Windows 11 を入れ、サポートされたアカウント操作でプロファイル名を固定します。Windows Insider のビルドは使いません。
 
-## このドキュメントの完了条件
+## 完了条件
 
-- Windows 11 のクリーンインストールが完了している
-- `C:\Users\kou` のように意図したローカルユーザー名でサインインできる
-- Windows Update が完了している
+- 日本語版 Windows 11 の Windows Update が完了している。
+- 管理者ユーザー `kou` でサインインでき、`$env:USERPROFILE` が `C:\Users\kou` である。
+- Desktop、Documents、Downloads の実パスが `C:\Users\kou` の直下にある。
+- 一時ユーザーは `kou` の動作確認後に整理されている。
 
-## 1. インストール USB の作成
+## 1. 日本語版インストールメディアを作る
 
-### 必要なもの
+[Microsoft の Windows 11 ダウンロード](https://www.microsoft.com/software-download/windows11) からメディア作成ツールを取得し、言語に日本語を選びます。日本語表示の Explorer でも、Known Folder の既定の実パスは `%USERPROFILE%\Documents`、`Desktop` などです。表示名の「ドキュメント」と実フォルダー名は別物なので、日本語版で問題ありません。
 
-- Windows PC
-- 16GB 以上の USB メモリ（データは消去される）
+USB から起動し、最新安定版を通常どおりクリーンインストールします。Insider の ISO やプレビューチャネルは選びません。
 
-### 手順
+## 2. 通常の OOBE を一時ユーザーで完了する
 
-1. Microsoft 公式ページで Windows 11 のメディア作成ツールを開く
-2. `MediaCreationTool.exe` をダウンロードして実行する
-3. ライセンス条項に同意する
-4. 言語は `English (United States)` を選ぶ
-5. 「この PC におすすめのオプションを使う」のチェックを外す
-6. メディアの種類で「USB フラッシュ ドライブ」を選ぶ
-7. 対象の USB メモリを選ぶ
-8. 書き込み完了を待つ
+ネットワークを接続し、画面の案内どおり OOBE を完了します。Home / Pro の画面差を避けるため、非公式の OOBE bypass は使いません。
 
-### English でインストールする理由
+ここで作るユーザーは環境構築用の一時管理者です。Microsoft アカウントが必須なら普段使うアカウントで進めて構いませんが、この一時プロファイルへファイルを保存しません。OneDrive や Windows Backup の復元・フォルダーバックアップは開始しません。
 
-- 日本語パスは Node.js/npm、Python/pip、Docker などで問題を起こすことがある
-- English でインストールするとシステムフォルダが英語パスで初期化されやすい
-- 開発環境の安定性を優先する
+## 3. ローカル管理者 `kou` を作る
 
-## 2. Windows 11 のインストール
+1. 設定 → アカウント → その他のユーザー を開く。
+2. 「アカウントの追加」→「このユーザーのサインイン情報がありません」→「Microsoft アカウントを持たないユーザーを追加する」を選ぶ。
+3. ユーザー名を `kou` にしてローカルアカウントを作る。
+4. 作成したユーザーの「アカウントの種類の変更」で「管理者」を選ぶ。
+5. 一時ユーザーからサインアウトし、`kou` へ初回サインインする。
 
-### USB から起動
+[Microsoft のユーザーアカウント管理](https://support.microsoft.com/windows/security/identity-signin/manage-user-accounts-in-windows) にある「その他のユーザー」の操作だけを使います。
 
-1. 作成した USB メモリを PC に接続する
-2. PC を再起動し、BIOS/UEFI から USB 起動を選択する
+## 4. パスと管理者権限を確認する
 
-### 言語・キーボード選択
+`kou` の PowerShell で実行します。
 
-- Language: English (United States)
-- Keyboard: Japanese
+```powershell
+$env:USERPROFILE
+[Environment]::GetFolderPath('Desktop')
+[Environment]::GetFolderPath('MyDocuments')
+(Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders').'{374DE290-123F-4565-9164-39C4925E467B}'
+```
 
-> 注意: インストールメディアを English で作成したため、インストーラーも英語表示になる
+順に `C:\Users\kou`、`C:\Users\kou\Desktop`、`C:\Users\kou\Documents`、`%USERPROFILE%\Downloads` 相当であることを確認します。管理者として PowerShell を開けることも確認します。
 
-### クリーンインストール
+## 5. 一時ユーザーを整理し、Microsoft アカウントへ切り替える
 
-1. 「カスタム: Windows のみをインストール（詳細）」を選ぶ
-2. ディスクのパーティションをすべて削除する
-3. 未割り当て領域を選択して「次へ」を押す
-4. インストール完了を待つ
+`kou` への再サインイン、パス、管理者権限がすべて正しいことを確認してから、一時ユーザーを設定 → アカウント → その他のユーザー で削除します。削除は自動化しません。
 
-> 警告: この操作で PC 上のすべてのデータが消去される
+続いて `kou` で設定 → アカウント → ユーザーの情報 を開き、「Microsoft アカウントでのサインインに切り替える」を選びます。切り替え後も `$env:USERPROFILE` が変わっていないことを再確認します。
 
-## 3. 初回セットアップ（OOBE）
+## 6. Windows Update
 
-ローカルアカウントを作成し、`C:\Users\kou` を確保する。
-
-### 手順
-
-1. ネットワーク接続画面まで進む
-2. `Shift + F10` を押してコマンドプロンプトを開く
-3. Surface の場合は `Shift + Fn + F10` を使う
-4. `OOBE\BYPASSNRO` を実行する
-5. 自動で再起動したら再度セットアップを進める
-6. ネットワーク画面で「インターネットに接続していません」を選ぶ
-7. 「制限された設定で続行」を選ぶ
-8. ローカルユーザー `kou` を作成する
-
-この時点で `C:\Users\kou` が作成される。
-
-## 4. Microsoft アカウントの紐づけ
-
-### 手順
-
-1. 設定 → アカウント → 自分の情報 を開く
-2. 「Microsoft アカウントでのサインインに切り替える」を選ぶ
-3. Microsoft アカウントでログインする
-
-### 結果
-
-- `C:\Users\kou` のまま運用できる
-- OneDrive、Microsoft Store、ライセンスが有効になる
-
-## 5. Windows Update
-
-### Windows Update
-
-- Windows Update をすべて完了させる
-- 再起動が必要なら再起動する
+設定 → Windows Update で更新と再起動を、更新がなくなるまで繰り返します。設定 → Windows Update → Windows Insider Program では参加していない状態を維持します。
 
 ## 次に読む
 
-Windows の初期設定は [02. Windows 設定]({{ '/docs/02-WINDOWS-SETUP/' | relative_url }}) に進む。
+[02. 日本語入力と Windows 設定]({{ '/docs/02-WINDOWS-SETUP/' | relative_url }}) に進みます。

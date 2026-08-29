@@ -1,131 +1,20 @@
 # windows-setup-2026
 
-Windows 11 と WSL Ubuntu の開発環境を、依存関係が崩れない順番で構築するための個人用リファレンス。
+Windows 11 のクリーンインストール後に、必要最小限の Windows / WSL 開発環境を再構築するための個人用ガイドです。
 
-## ローカル開発
+対象は Git / GitHub、Node.js / TypeScript、Python / uv、Docker、Playwright、Codex、Claude Code と、日本語入力を含む Windows の個人設定です。インストール済みアプリをすべて再現することは目的にしません。
 
-GitHub Pages 互換のローカル確認を前提に、`github-pages` gem を使って起動する。
+## セットアップを始める
 
-### 前提
+[Windows Setup 2026](https://koumatsumoto.github.io/windows-setup-2026/) を開き、5段階の必須手順を上から進めます。GitHub 上で読む場合は [index.md](index.md) が入口です。
 
-- Ruby
-- Bundler
+安全に自動化できる導入処理は `scripts/windows/` と `scripts/wsl/` にあります。アカウント作成、認証、OneDrive、IME などは手動確認を残しています。
 
-### セットアップ
+## 対象外
 
-```bash
-./bin/setup-site
-```
+- ディスク消去前のバックアップ、無人インストール、OOBE やユーザー削除の自動化
+- 秘密値、認証情報、SSH 鍵、API キーの保存や移行
+- Windows 側の開発ランタイムや、復旧条件に直接必要ないアプリ・CLI
+- OneDrive アプリのアンインストール
 
-依存は `vendor/bundle` に閉じる。
-
-### 起動
-
-```bash
-./bin/serve-site
-```
-
-起動後は `http://127.0.0.1:4000` を開く。
-
-### ビルド確認
-
-```bash
-./bin/build-site
-```
-
-### Docker Compose で起動
-
-```bash
-docker compose up site
-```
-
-起動後は `http://127.0.0.1:4000` を開く。
-compose は生成先を `_site-local` に固定して、既存 `_site/` の権限差分に引きずられないようにする。
-ポート公開は `127.0.0.1` に限定し、ローカル確認専用とする。
-
-## 構成
-
-- `_config.yml`
-  - サイト全体設定とテーマ設定
-- `compose.yaml`
-  - Docker ベースのローカル確認入口
-- `_layouts/`
-  - ページ骨格
-- `_includes/`
-  - ナビなどの共通部品
-- `assets/`
-  - CSS と見た目
-- `index.md`, `docs/*.md`
-  - 公開コンテンツ
-- `AUTHORING.md`
-  - 運用者向けの theme contract と再利用メモ
-
-## Theme Contract
-
-- ナビ順はファイル名ではなく front matter の `nav_order` で管理する
-- ナビ表示名は `nav_label` を使う。未指定時は `title`
-- ナビに出さないページは `nav_hidden: true` を使う
-- テーマ設定は `_config.yml` の `theme_settings` に置く
-- 既存の `/docs/.../` permalink は維持し、本文リンクは `relative_url` を使う
-
-## 読み方
-
-このリポジトリは 4 段階の手順書で構成する。上から順に進める前提で、各ドキュメントに完了条件と次の読み先を置いている。
-
-## セットアップの流れ
-
-1. Windows をクリーンインストールする
-2. Windows の基本設定を行う
-3. Windows 側の開発環境と WSL をセットアップする
-4. Ubuntu 側の CLI とランタイムをセットアップする
-
-## インデックス
-
-| 順番 | ドキュメント | 役割 |
-| ---- | ------------ | ---- |
-| 1 | [docs/01-WINDOWS-CLEAN-INSTALL.md](docs/01-WINDOWS-CLEAN-INSTALL.md) | Windows 初期インストール、OOBE、アカウント固定、Windows Update |
-| 2 | [docs/02-WINDOWS-SETUP.md](docs/02-WINDOWS-SETUP.md) | 不要アプリ整理、Microsoft Store 更新、言語と Explorer の設定、Insider Program |
-| 3 | [docs/03-WINDOWS-DEVELOPMENT-SETUP.md](docs/03-WINDOWS-DEVELOPMENT-SETUP.md) | Windows 側アプリ導入、Git 設定、WSL と Ubuntu の準備 |
-| 4 | [docs/04-UBUNTU-SETUP.md](docs/04-UBUNTU-SETUP.md) | Ubuntu 側の Git、gh、fnm、Playwright のセットアップ |
-| — | [docs/05-DEV-TOOL-CONFIG.md](docs/05-DEV-TOOL-CONFIG.md) | Git・npm・pip の共通設定（03 と 04 から参照） |
-| — | [docs/06-SHELL-CONFIG.md](docs/06-SHELL-CONFIG.md) | .bashrc / .bash_profile の共通設定（03 と 04 から参照） |
-| — | [docs/07-WINDOWS-TERMINAL.md](docs/07-WINDOWS-TERMINAL.md) | Windows Terminal の管理用設定（03 の後に参照） |
-| — | [docs/08-AI-CODING-TOOLS.md](docs/08-AI-CODING-TOOLS.md) | AI コーディング CLI ツールのセットアップ（04 の後に参照） |
-
-## 依存関係
-
-- `docs/02-WINDOWS-SETUP.md` は `docs/01-WINDOWS-CLEAN-INSTALL.md` の完了後に読む
-- `docs/03-WINDOWS-DEVELOPMENT-SETUP.md` は `docs/02-WINDOWS-SETUP.md` の完了後に読む
-- `docs/04-UBUNTU-SETUP.md` は `docs/03-WINDOWS-DEVELOPMENT-SETUP.md` で Ubuntu の初回起動まで終えてから読む
-- Docker Desktop は Windows 側でインストールし、WSL バックエンドを使う前提で運用する
-
-## 横展開するときに持っていくもの
-
-- `_layouts/`
-- `_includes/`
-- `assets/`
-- `_config.yml`
-- `Gemfile`
-- `Gemfile.lock`
-- `compose.yaml`
-- `AUTHORING.md`
-- `.playwright/cli.config.json`
-- `.claude/skills/playwright-cli/`
-- `bin/setup-site`
-- `bin/serve-site`
-- `bin/build-site`
-- `index.md` をサンプルとして利用
-
-横展開先では、少なくとも次を見直す。
-
-- `title`
-- `description`
-- `theme_settings.nav_title`
-- `theme_settings.nav_aria_label`
-- `theme_settings.home_nav_label`
-- `theme_settings.mobile_nav_label`
-- `theme_settings.show_build_time`
-- `theme_settings.build_time_label`
-- 各ページの `nav_order`
-- 各ページの `nav_label`
-- 各ページの `permalink`
+サイトのローカル確認と執筆ルールは [AUTHORING.md](AUTHORING.md) を参照してください。
