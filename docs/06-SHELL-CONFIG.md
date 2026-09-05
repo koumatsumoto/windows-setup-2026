@@ -20,9 +20,9 @@ nav_section: reference
 - `fnm env --use-on-cd --shell bash` による Node.js の切り替え
 - `grb` / `grw` Git helper の読み込み
 
-`grb` は `main` を `origin/main` へ安全に fast-forward した後、`main` にマージ済みで、どの worktree でも使用されていないローカルbranchだけを削除します。呼び出し元のbranchは切り替えません。local `main` が ahead または diverged の場合は、branchを削除せず停止します。
+`grb` は `origin` のremote HEADが示す現在の既定branchを安全にfast-forwardした後、その既定branchにマージ済みで、どのworktreeでも使用されていないローカルbranchだけを削除します。呼び出し元のbranchは切り替えません。localの既定branchがaheadまたはdivergedの場合は、branchを削除せず停止します。
 
-`grw` はprimary worktreeが `main` の場合に、すべてのlinked worktreeを削除します。dirty worktreeも削除しますが、locked worktreeは残し、branch自体は削除しません。primary worktreeが `main` でない場合は、何も削除せず停止します。
+`grw` はprimary worktreeが `origin` のremote HEADが示す現在の既定branchの場合に、すべてのlinked worktreeを削除します。dirty worktreeも削除しますが、locked worktreeは残し、branch自体は削除しません。既定branchを取得できない場合やprimary worktreeが既定branchでない場合は、何も削除せず停止します。
 
 そのほかのエイリアス、プロンプト、apt 更新、Windows アプリ起動などの個人用関数は復旧条件に含めません。
 

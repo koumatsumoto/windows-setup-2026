@@ -25,18 +25,21 @@ assert_no_ref() {
 
 new_repo() {
   local name="$1"
+  local default_branch="${2:-main}"
   local remote="$tmp_root/$name-remote.git"
   local repo="$tmp_root/$name"
 
   git init --quiet --bare "$remote"
-  git init --quiet --initial-branch=main "$repo"
+  git -C "$remote" symbolic-ref HEAD "refs/heads/$default_branch"
+  git init --quiet --initial-branch="$default_branch" "$repo"
   git -C "$repo" config user.name Test
   git -C "$repo" config user.email test@example.com
   printf 'initial\n' >"$repo/file.txt"
   git -C "$repo" add file.txt
   git -C "$repo" commit --quiet -m initial
   git -C "$repo" remote add origin "$remote"
-  git -C "$repo" push --quiet --set-upstream origin main
+  git -C "$repo" push --quiet --set-upstream origin "$default_branch"
+  git -C "$repo" remote set-head origin --auto >/dev/null
   printf '%s\n' "$repo"
 }
 
@@ -44,13 +47,15 @@ push_remote_update() {
   local repo="$1"
   local name="$2"
   local updater="$tmp_root/$name-updater"
+  local default_branch
 
   git clone --quiet "$(git -C "$repo" remote get-url origin)" "$updater"
   git -C "$updater" config user.name Test
   git -C "$updater" config user.email test@example.com
+  default_branch="$(git -C "$updater" branch --show-current)"
   printf '%s\n' "$name" >>"$updater/file.txt"
   git -C "$updater" commit --quiet -am "$name"
-  git -C "$updater" push --quiet origin main
+  git -C "$updater" push --quiet origin "$default_branch"
 }
 
 test_grb_from_linked_worktree() {
@@ -231,7 +236,56 @@ test_grw_noop() {
   repo="$(new_repo grw-noop)"
   cd -- "$repo"
   output="$(grw)"
-  [[ "$output" == 'grw: no non-main worktrees' ]] || fail 'grw no-op output changed'
+  [[ "$output" == 'grw: no linked worktrees' ]] || fail 'grw no-op output changed'
+}
+
+test_non_main_default_branch() {
+  local repo linked_wt
+  repo="$(new_repo non-main-default trunk)"
+  git -C "$repo" branch merged-delete
+  push_remote_update "$repo" non-main-default
+
+  cd -- "$repo"
+  grb
+
+  [[ "$(git rev-parse trunk)" == "$(git rev-parse origin/trunk)" ]] || fail 'grb did not update the non-main default branch'
+  assert_no_ref "$repo" refs/heads/merged-delete
+
+  linked_wt="$tmp_root/non-main linked"
+  git worktree add --quiet -b feature "$linked_wt"
+  grw
+
+  [[ ! -e "$linked_wt" ]] || fail 'grw did not preserve the non-main default primary worktree'
+  assert_ref "$repo" refs/heads/feature
+}
+
+test_changed_remote_default_ignores_stale_origin_head() {
+  local repo remote linked_wt before rc
+  repo="$(new_repo changed-default)"
+  remote="$(git -C "$repo" remote get-url origin)"
+  git -C "$repo" branch trunk
+  git -C "$repo" push --quiet origin trunk
+  git -C "$remote" symbolic-ref HEAD refs/heads/trunk
+  push_remote_update "$repo" changed-default
+
+  [[ "$(git -C "$repo" symbolic-ref refs/remotes/origin/HEAD)" == refs/remotes/origin/main ]] || fail 'origin HEAD was not stale before the test'
+
+  cd -- "$repo"
+  before="$(git branch --show-current)"
+  grb
+
+  [[ "$(git branch --show-current)" == "$before" ]] || fail 'grb switched to a changed remote default branch'
+  [[ "$(git rev-parse trunk)" == "$(git rev-parse origin/trunk)" ]] || fail 'grb trusted stale origin HEAD metadata'
+
+  linked_wt="$tmp_root/changed default linked"
+  git worktree add --quiet -b feature "$linked_wt"
+  set +e
+  grw >/dev/null 2>&1
+  rc=$?
+  set -e
+
+  [[ $rc -ne 0 ]] || fail 'grw trusted stale origin HEAD metadata'
+  [[ -d "$linked_wt" ]] || fail 'grw removed a worktree when primary was not the current default branch'
 }
 
 test_managed_env_sources_helpers() {
@@ -256,6 +310,8 @@ test_grb_continues_after_delete_failure
 test_grw_removes_linked_worktrees
 test_grw_refuses_non_main_primary
 test_grw_noop
+test_non_main_default_branch
+test_changed_remote_default_ignores_stale_origin_head
 test_managed_env_sources_helpers
 
 printf '[PASS] git helper integration tests\n'
