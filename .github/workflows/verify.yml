@@ -56,7 +56,7 @@ jobs:
         run: bash tests/shell/git-helpers-test.sh
 
       - name: PowerShell syntax and setup config
-        shell: pwsh
+        shell: powershell
         run: |
           $ErrorActionPreference = 'Stop'
           foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {

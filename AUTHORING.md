@@ -52,7 +52,7 @@ bash tests/shell/git-helpers-test.sh
 ./bin/build-site
 ```
 
-PowerShell スクリプトまたは `SetupConfig.psd1` を変更した場合は、PowerShell で次も実行します。スクリプト本体は実行せず、構文とデータファイルの読み込みを確認します。
+PowerShell スクリプトまたは `SetupConfig.psd1` を変更した場合は、Windows PowerShell 5.1 で次も実行します。スクリプト本体は実行せず、構文とデータファイルの読み込みを確認します。
 
 ```powershell
 $ErrorActionPreference = 'Stop'
@@ -69,7 +69,7 @@ foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {
 $null = Import-PowerShellDataFile ./scripts/windows/SetupConfig.psd1
 ```
 
-PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・PowerShell 構文・設定ファイル読み込みを自動確認します。
+PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。
 
 CI はセットアップを実行しません。winget / apt / WSL install、AI CLI install・認証、Docker runtime、`verify-runtime.sh`、Pages deploy は対象外です。Pages の公開は既存の `deploy-pages.yml` が担います。
 
