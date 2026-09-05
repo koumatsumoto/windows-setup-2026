@@ -1,0 +1,72 @@
+name: Verify
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.1
+
+      - name: Bash syntax
+        shell: bash
+        run: |
+          for file in bin/setup-site bin/build-site bin/serve-site \
+            scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
+            bash -n "$file" || exit 1
+          done
+
+      - name: Git helper integration tests
+        shell: bash
+        run: bash tests/shell/git-helpers-test.sh
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+
+      - name: Install site dependencies
+        run: ./bin/setup-site
+
+      - name: Build with Jekyll
+        run: ./bin/build-site
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.1
+
+      - name: Bash syntax
+        shell: bash
+        run: |
+          for file in bin/setup-site bin/build-site bin/serve-site \
+            scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
+            bash -n "$file" || exit 1
+          done
+
+      - name: Git helper integration tests
+        shell: bash
+        run: bash tests/shell/git-helpers-test.sh
+
+      - name: PowerShell syntax and setup config
+        shell: pwsh
+        run: |
+          $ErrorActionPreference = 'Stop'
+          foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {
+              $parseErrors = $null
+              $tokens = $null
+              $null = [System.Management.Automation.Language.Parser]::ParseFile(
+                  $file.FullName, [ref]$tokens, [ref]$parseErrors)
+              if ($parseErrors.Count -gt 0) {
+                  $parseErrors | ForEach-Object { Write-Host $_ }
+                  throw "PowerShell parse failed: $($file.Name)"
+              }
+          }
+          $null = Import-PowerShellDataFile ./scripts/windows/SetupConfig.psd1

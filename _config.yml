@@ -20,4 +20,4 @@ theme_settings:
   mobile_nav_label: Guide
   docs_path_prefix: /docs/
   show_build_time: true
-  build_time_label: 最終更新
+  build_time_label: サイト生成
