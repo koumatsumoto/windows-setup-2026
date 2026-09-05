@@ -72,6 +72,7 @@ if ($env:USERPROFILE -eq 'C:\Users\kou') {
 $knownFolders = @{
     Desktop = [Environment]::GetFolderPath('Desktop')
     Documents = [Environment]::GetFolderPath('MyDocuments')
+    Pictures = [Environment]::GetFolderPath('MyPictures')
     Downloads = [Environment]::ExpandEnvironmentVariables(
         (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders').'{374DE290-123F-4565-9164-39C4925E467B}'
     )
@@ -93,6 +94,9 @@ if ($languages.Count -gt 0 -and $languages[0].LanguageTag -match '^ja(?:-JP)?$' 
 } else {
     Add-Result FAIL 'The required Japanese language and regional settings do not match.'
 }
+Add-Result MANUAL 'Verify that supported Windows 11 and all normal updates offered for this device are installed; do not opt into Insider or Preview builds.'
+Add-Result MANUAL 'Verify Japan as the country or region and Microsoft IME as the Japanese keyboard.'
+Add-Result MANUAL 'Verify that Explorer shows file name extensions and hidden files.'
 Add-Result MANUAL 'Verify the Muhenkan, Henkan, and Ctrl+Space IME behavior in Notepad.'
 
 if (-not (Get-Command winget.exe -ErrorAction SilentlyContinue)) {
@@ -106,6 +110,19 @@ if (-not (Get-Command winget.exe -ErrorAction SilentlyContinue)) {
         }
     }
 }
+
+if (-not (Get-Command code -ErrorAction SilentlyContinue)) {
+    Add-Result FAIL 'The code command was not found. Open a new PowerShell after installing VS Code.'
+} else {
+    $extensions = @(& code --list-extensions 2>$null)
+    if ($LASTEXITCODE -eq 0 -and $extensions -contains 'ms-vscode-remote.remote-wsl') {
+        Add-Result PASS 'The VS Code WSL extension is installed.'
+    } else {
+        Add-Result FAIL 'The VS Code WSL extension was not detected. Run: code --install-extension ms-vscode-remote.remote-wsl'
+    }
+}
+Add-Result MANUAL 'Start Ubuntu-26.04 and verify that whoami returns kou.'
+Add-Result MANUAL 'Open code . from Ubuntu and verify that the window shows WSL: Ubuntu-26.04.'
 
 $oneDrivePaths = @(
     (Join-Path $env:LOCALAPPDATA 'Microsoft\OneDrive\OneDrive.exe'),
@@ -127,6 +144,15 @@ if ($knownFolders.Values -match '\\OneDrive(?:\\|$)') {
     Add-Result PASS 'Known folders do not point inside OneDrive.'
 }
 Add-Result MANUAL 'Verify that OneDrive is signed out, folder backup is off, and startup is disabled.'
+
+foreach ($argument in @('--version', '--status')) {
+    $diagnostic = Invoke-WslText -ArgumentList @($argument)
+    Write-Host "[info] wsl $argument (exit $($diagnostic.ExitCode))"
+    Write-Host $diagnostic.Output
+    if ($diagnostic.ExitCode -ne 0) {
+        Add-Result MANUAL "WSL diagnostics failed. Run wsl $argument in PowerShell and check the reported error."
+    }
+}
 
 $distribution = $config.WslDistribution
 $wslList = Invoke-WslText -ArgumentList @('--list', '--verbose')

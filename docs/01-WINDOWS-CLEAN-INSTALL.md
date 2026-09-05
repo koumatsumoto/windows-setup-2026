@@ -8,20 +8,20 @@ nav_section: setup
 
 # 01. Windows 11 と C:\Users\kou
 
-最新安定版の日本語 Windows 11 を入れ、サポートされたアカウント操作でプロファイル名を固定します。Windows Insider のビルドは使いません。
+対象端末に Microsoft が通常提供する、サポート中の日本語 Windows 11（GA / 安定版）を入れ、サポートされたアカウント操作でプロファイル名を固定します。Windows Insider のビルドは使いません。
 
 ## 完了条件
 
 - 日本語版 Windows 11 の Windows Update が完了している。
 - 管理者ユーザー `kou` でサインインでき、`$env:USERPROFILE` が `C:\Users\kou` である。
-- Desktop、Documents、Downloads の実パスが `C:\Users\kou` の直下にある。
+- Desktop、Documents、Downloads、Pictures の実パスが `C:\Users\kou` の直下にある。
 - 一時ユーザーは `kou` の動作確認後に整理されている。
 
 ## 1. 日本語版インストールメディアを作る
 
 [Microsoft の Windows 11 ダウンロード](https://www.microsoft.com/software-download/windows11) からメディア作成ツールを取得し、言語に日本語を選びます。日本語表示の Explorer でも、Known Folder の既定の実パスは `%USERPROFILE%\Documents`、`Desktop` などです。表示名の「ドキュメント」と実フォルダー名は別物なので、日本語版で問題ありません。
 
-USB から起動し、最新安定版を通常どおりクリーンインストールします。Insider の ISO やプレビューチャネルは選びません。
+USB から起動し、対象端末に対応した GA / 安定版を通常どおりクリーンインストールします。Insider の ISO やプレビューチャネルは選びません。
 
 ## 2. 通常の OOBE を一時ユーザーで完了する
 
@@ -47,10 +47,11 @@ USB から起動し、最新安定版を通常どおりクリーンインスト�
 $env:USERPROFILE
 [Environment]::GetFolderPath('Desktop')
 [Environment]::GetFolderPath('MyDocuments')
+[Environment]::GetFolderPath('MyPictures')
 (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders').'{374DE290-123F-4565-9164-39C4925E467B}'
 ```
 
-順に `C:\Users\kou`、`C:\Users\kou\Desktop`、`C:\Users\kou\Documents`、`%USERPROFILE%\Downloads` 相当であることを確認します。管理者として PowerShell を開けることも確認します。
+順に `C:\Users\kou`、`C:\Users\kou\Desktop`、`C:\Users\kou\Documents`、`C:\Users\kou\Pictures`、`%USERPROFILE%\Downloads` 相当であることを確認します。管理者として PowerShell を開けることも確認します。
 
 ## 5. 一時ユーザーを整理し、Microsoft アカウントへ切り替える
 
@@ -60,7 +61,9 @@ $env:USERPROFILE
 
 ## 6. Windows Update
 
-設定 → Windows Update で更新と再起動を、更新がなくなるまで繰り返します。設定 → Windows Update → Windows Insider Program では参加していない状態を維持します。
+設定 → Windows Update で、その端末へ通常提供される更新と再起動を、更新がなくなるまで繰り返します。オプションのプレビュー更新は必須にしません。設定 → Windows Update → Windows Insider Program では参加していない状態を維持します。
+
+機能リリースの番号が最大のものを全端末で選ぶわけではありません。新しい世代のデバイスだけに提供され、既存端末への機能更新にならないリリースもあります。対象とサポート期間は [Microsoft のリリース情報](https://learn.microsoft.com/en-us/windows/release-health/windows11-release-information) で確認します。
 
 ## 次に読む
 

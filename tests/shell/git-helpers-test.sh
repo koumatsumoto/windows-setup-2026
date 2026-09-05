@@ -156,8 +156,8 @@ test_grb_refuses_diverged_main() {
 test_grb_continues_after_delete_failure() {
   local repo rc
   repo="$(new_repo grb-delete-failure)"
-  git -C "$repo" branch fail-one
-  git -C "$repo" branch z-delete-after
+  command git -C "$repo" branch fail-one
+  command git -C "$repo" branch z-delete-after
 
   cd -- "$repo"
   git() {

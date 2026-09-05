@@ -53,6 +53,8 @@ claude
 
 `verify.sh --final` は WSL 基盤に加え、Codex / Claude Code の存在と認証を確認します。認証だけが未完了なら Codex / Claude Code を再度起動します。`verify-runtime.sh` は Docker daemon と一時 Playwright セッションを実際に起動して閉じます。
 
+導入や更新に問題がある場合は、公式の補助診断 `claude doctor` を手動で実行します。診断結果はローカルで確認し、`verify.sh --final` の必須判定には含めません。
+
 ## 4. Windows の最終確認
 
 Windows 側で ZIP 展開したリポジトリへ移動し、通常の PowerShell で実行します。
@@ -63,7 +65,9 @@ Windows 側で ZIP 展開したリポジトリへ移動し、通常の PowerShel
 
 最後に画面で確認します。
 
-- Windows Insider Program に参加していない。
+- 対象端末向けのサポート中の Windows 11 と通常更新が適用され、Windows Insider Program に参加していない。
+- Explorer に拡張子と隠しファイルが表示される。
+- VS Code に WSL 拡張があり、Ubuntu から開いた window に `WSL: Ubuntu-26.04` が表示される。
 - IME は `無変換 = オフ`、`変換 = オン`、`Ctrl + Space = なし`。
 - OneDrive は未サインイン、フォルダーバックアップ無効、自動起動無効。
 - `$env:USERPROFILE` と Known Folder は `C:\Users\kou` 直下。

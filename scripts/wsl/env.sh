@@ -1,3 +1,4 @@
+# shellcheck shell=bash
 # Managed by windows-setup. Keep personal shell settings outside this file.
 export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$PATH"
 

@@ -22,6 +22,13 @@ jobs:
             bash -n "$file" || exit 1
           done
 
+      - name: ShellCheck
+        shell: bash
+        run: |
+          shellcheck --external-sources --source-path=SCRIPTDIR \
+            bin/setup-site bin/build-site bin/serve-site \
+            scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh
+
       - name: Git helper integration tests
         shell: bash
         run: bash tests/shell/git-helpers-test.sh

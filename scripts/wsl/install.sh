@@ -50,7 +50,7 @@ repo_file="/etc/apt/sources.list.d/github-cli.list"
 tmp_dir="$(mktemp -d)"
 trap 'rm -rf -- "$tmp_dir"' EXIT
 
-curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$tmp_dir/githubcli.gpg"
+curl -fsSL --retry 3 --retry-all-errors https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$tmp_dir/githubcli.gpg"
 sudo install -d -m 0755 /etc/apt/keyrings /etc/apt/sources.list.d
 sudo install -m 0644 "$tmp_dir/githubcli.gpg" "$keyring"
 printf 'deb [arch=%s signed-by=%s] https://cli.github.com/packages stable main\n' \
@@ -58,7 +58,7 @@ printf 'deb [arch=%s signed-by=%s] https://cli.github.com/packages stable main\n
 sudo apt-get update
 sudo apt-get install -y --no-install-recommends gh
 
-curl -fsSL "$FNM_INSTALL_URL" -o "$tmp_dir/install-fnm.sh"
+curl -fsSL --retry 3 --retry-all-errors "$FNM_INSTALL_URL" -o "$tmp_dir/install-fnm.sh"
 bash "$tmp_dir/install-fnm.sh" --skip-shell
 
 managed_env="$HOME/$MANAGED_ENV_RELATIVE_PATH"
@@ -83,7 +83,7 @@ fnm default "$(fnm current)"
 if command -v uv >/dev/null 2>&1; then
   UV_NO_MODIFY_PATH=1 uv self update
 else
-  curl -fsSL "$UV_INSTALL_URL" -o "$tmp_dir/install-uv.sh"
+  curl -fsSL --retry 3 --retry-all-errors "$UV_INSTALL_URL" -o "$tmp_dir/install-uv.sh"
   UV_NO_MODIFY_PATH=1 sh "$tmp_dir/install-uv.sh"
 fi
 

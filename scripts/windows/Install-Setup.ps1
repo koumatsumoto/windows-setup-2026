@@ -82,8 +82,13 @@ $installed = @($installedOutput.Output -split "`n") | ForEach-Object { $_.Trim()
 if ($installed -notcontains $distribution) {
     if ($PSCmdlet.ShouldProcess($distribution, 'Install WSL distribution')) {
         Invoke-CheckedCommand -FilePath 'wsl.exe' -ArgumentList @('--install', '--distribution', $distribution, '--no-launch')
-        Write-Host '[info] If Windows requests a restart, restart and run this script again.'
+        Write-Host '[info] Distribution installation finished. Restart Windows if requested, then run this script again to update WSL and configure defaults.'
+        return
     }
+}
+
+if ($PSCmdlet.ShouldProcess('WSL', 'Update WSL through the stable channel')) {
+    Invoke-CheckedCommand -FilePath 'wsl.exe' -ArgumentList @('--update')
 }
 
 if ($PSCmdlet.ShouldProcess('WSL', 'Set WSL 2 as the default for new distributions')) {
