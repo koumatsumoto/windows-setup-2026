@@ -44,6 +44,21 @@ else
   fail '管理対象のシェルフラグメントがありません。'
 fi
 
+managed_git_helpers="$HOME/$MANAGED_GIT_HELPERS_RELATIVE_PATH"
+if [[ -r "$managed_git_helpers" ]]; then
+  pass '管理対象の Git helper フラグメントを読めます。'
+else
+  fail '管理対象の Git helper フラグメントがありません。'
+fi
+
+for helper_name in grb grw; do
+  if declare -F "$helper_name" >/dev/null 2>&1; then
+    pass "$helper_name function を利用できます。"
+  else
+    fail "$helper_name function を利用できません。"
+  fi
+done
+
 source_count="$(grep -Fxc "$MANAGED_SOURCE_LINE" "$HOME/.bashrc" 2>/dev/null || true)"
 if [[ "$source_count" == "1" ]]; then
   pass '.bashrc の source 行は1件です。'

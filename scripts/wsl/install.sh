@@ -38,6 +38,7 @@ if [[ "$dry_run" == true ]]; then
   printf '[dry-run] uv: %s\n' "$UV_INSTALL_URL"
   printf '[dry-run] global @playwright/cli@latest + Chromium\n'
   printf '[dry-run] managed shell fragment: ~/%s\n' "$MANAGED_ENV_RELATIVE_PATH"
+  printf '[dry-run] managed Git helpers: ~/%s\n' "$MANAGED_GIT_HELPERS_RELATIVE_PATH"
   exit 0
 fi
 
@@ -60,8 +61,10 @@ curl -fsSL "$FNM_INSTALL_URL" -o "$tmp_dir/install-fnm.sh"
 bash "$tmp_dir/install-fnm.sh" --skip-shell
 
 managed_env="$HOME/$MANAGED_ENV_RELATIVE_PATH"
+managed_git_helpers="$HOME/$MANAGED_GIT_HELPERS_RELATIVE_PATH"
 mkdir -p "$(dirname -- "$managed_env")"
 install -m 0644 "$script_dir/env.sh" "$managed_env"
+install -m 0644 "$script_dir/../shell/git-helpers.sh" "$managed_git_helpers"
 
 touch "$HOME/.bashrc"
 if ! grep -Fqx "$MANAGED_SOURCE_LINE" "$HOME/.bashrc"; then

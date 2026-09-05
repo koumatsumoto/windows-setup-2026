@@ -19,4 +19,5 @@ CODEX_INSTALL_URL="https://chatgpt.com/codex/install.sh"
 CLAUDE_INSTALL_URL="https://claude.ai/install.sh"
 
 MANAGED_ENV_RELATIVE_PATH=".config/windows-setup/env.sh"
+MANAGED_GIT_HELPERS_RELATIVE_PATH=".config/windows-setup/git-helpers.sh"
 MANAGED_SOURCE_LINE='[ -f "$HOME/.config/windows-setup/env.sh" ] && . "$HOME/.config/windows-setup/env.sh"'
