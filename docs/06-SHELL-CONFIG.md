@@ -31,11 +31,11 @@ nav_section: reference
 Git for Windows / Git Bashを既に導入している場合は、このリポジトリ内の同じfragmentを `~/.bashrc` からsourceします。Git for Windowsの導入自体は、このセットアップの必須項目ではありません。
 
 ```bash
-[ -f "/c/Users/kou/path/to/windows-setup-2026/scripts/shell/git-helpers.sh" ] && \
-  . "/c/Users/kou/path/to/windows-setup-2026/scripts/shell/git-helpers.sh"
+[ -f "/c/Users/kou/path/to/windows-setup/scripts/shell/git-helpers.sh" ] && \
+  . "/c/Users/kou/path/to/windows-setup/scripts/shell/git-helpers.sh"
 ```
 
-`/c/Users/kou/path/to/windows-setup-2026` は実際のclone先へ置き換えます。空白を含むpathでも、上記のように引用符で囲めば利用できます。
+`/c/Users/kou/path/to/windows-setup` は実際のclone先へ置き換えます。空白を含むpathでも、上記のように引用符で囲めば利用できます。
 
 ## 確認
 

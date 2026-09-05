@@ -1,4 +1,4 @@
-# windows-setup-2026
+# windows-setup
 
 Windows 11 のクリーンインストール後に、必要最小限の Windows / WSL 開発環境を再構築するための個人用ガイドです。
 
@@ -6,7 +6,7 @@ Windows 11 のクリーンインストール後に、必要最小限の Windows 
 
 ## セットアップを始める
 
-[Windows Setup 2026](https://koumatsumoto.github.io/windows-setup-2026/) を開き、5段階の必須手順を上から進めます。GitHub 上で読む場合は [index.md](index.md) が入口です。
+[Windows Setup](https://koumatsumoto.github.io/windows-setup/) を開き、5段階の必須手順を上から進めます。GitHub 上で読む場合は [index.md](index.md) が入口です。
 
 安全に自動化できる導入処理は `scripts/windows/` と `scripts/wsl/` にあります。アカウント作成、認証、OneDrive、IME などは手動確認を残しています。
 

@@ -23,7 +23,7 @@ nav_section: setup
 最初の1回だけ、Windows 側で展開した ZIP のスクリプトを使います。内容を確認し、dry-run、実行の順に進めます。
 
 ```bash
-cd /mnt/c/Users/kou/Downloads/windows-setup-2026/windows-setup-2026-main
+cd /mnt/c/Users/kou/Downloads/windows-setup/windows-setup-main
 ./scripts/wsl/install.sh --dry-run
 ./scripts/wsl/install.sh
 exec bash
@@ -38,8 +38,8 @@ Git の導入後は Windows の ZIP 展開先ではなく、Linux ファイル�
 ```bash
 mkdir -p ~/work
 cd ~/work
-git clone https://github.com/koumatsumoto/windows-setup-2026.git
-cd windows-setup-2026
+git clone https://github.com/koumatsumoto/windows-setup.git
+cd windows-setup
 ```
 
 以後のコマンドはこの WSL 側コピーで実行します。

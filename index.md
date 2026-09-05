@@ -1,9 +1,9 @@
 ---
-title: Windows Setup 2026
+title: Windows Setup
 nav_hidden: true
 ---
 
-# Windows Setup 2026
+# Windows Setup
 
 最新安定版の日本語 Windows 11 を基準に、必要最小限の開発環境を復旧する手順です。判断を減らすため、必須手順は次の5段階だけにしています。
 
