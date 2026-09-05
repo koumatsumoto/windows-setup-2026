@@ -79,7 +79,7 @@ uv add --dev pytest
 uv run pytest
 ```
 
-Python バージョンは各プロジェクトで決めます。OS セットアップでは特定の Python 系列を先回りして導入しません。
+開発用の Python バージョンは各プロジェクトで決め、uv で管理します。OS の `python3` と `build-essential` は [node-gyp による Node.js native addon のビルド](https://github.com/nodejs/node-gyp#on-unix)に備える汎用ビルド基盤として導入します。プロジェクト用 Python の系列を固定するものではありません。`unzip` は fnm の展開に必要です。
 
 ## 6. Playwright の用途を分ける
 
@@ -110,7 +110,7 @@ playwright-cli -s=smoke close
 
 ## 7. read-only 検証
 
-WSL 基盤と GitHub CLI の認証を確認します。Codex / Claude Code の導入・認証は次の Step 5 で確認します。
+WSL 基盤、Git の global `user.name` / `user.email`（非空）、`init.defaultBranch=main`、GitHub CLI の認証を確認します。`gh auth setup-git` による Git の credential helper 設定は自動判定せず、実施済みかを手動で確認します。Codex / Claude Code の導入・認証は次の Step 5 で確認します。
 
 ```bash
 ./scripts/wsl/verify.sh

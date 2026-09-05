@@ -47,20 +47,28 @@ playwright-cli -s=docs-check close
 サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。ShellCheck は CI で必須です。GitHub Actions と Bundler の依存更新は Dependabot が月次で確認します。
 
 ```bash
-for file in bin/setup-site bin/build-site bin/serve-site \
+for file in bin/setup-site bin/build-site bin/serve-site bin/verify-site \
   scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
   bash -n "$file" || exit 1
 done
 
 bash tests/shell/git-helpers-test.sh
+bash tests/shell/wsl-setup-test.sh
 ./bin/build-site
+./bin/verify-site
+./bin/verify-site --self-test
+
+# コピー先のホームを使い捨てコンテナに隔離して同期を検証する
+docker run --rm -e WINDOWS_SETUP_DISPOSABLE_TEST=1 \
+  -v "$PWD:/app:ro" -w /app ubuntu:26.04 \
+  bash tests/shell/sync-config-test.sh
 ```
 
 CI の ShellCheck をローカルで再現する場合は、ShellCheck を別途用意して次を実行します。標準の WSL セットアップには含めません。
 
 ```bash
 shellcheck --external-sources --source-path=SCRIPTDIR \
-  bin/setup-site bin/build-site bin/serve-site \
+  bin/setup-site bin/build-site bin/serve-site bin/verify-site \
   scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh
 ```
 
@@ -81,8 +89,10 @@ foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {
 $null = Import-PowerShellDataFile ./scripts/windows/SetupConfig.psd1
 ```
 
-PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・ShellCheck・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。
+PR・main への push・手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・ShellCheck・Git helper integration test・WSL Git 設定の回帰テスト・Ruby 3.3 による Jekyll build とサイト検証、Windows の Git Bash で Bash 構文・Git helper integration test・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。GitHub Actions の minor / patch 更新は Dependabot が1グループにまとめ、major 更新は個別 PR にします。
 
-CI はセットアップを実行しません。winget / apt / WSL install、AI CLI install・認証、Docker runtime、`verify-runtime.sh`、Pages deploy は対象外です。Pages の公開は既存の `deploy-pages.yml` が担います。
+CI はホストのセットアップを実行しません。フラグメント同期のテストは使い捨てコンテナ内で実行します。winget / apt / WSL install、AI CLI install・認証、利用者環境の Docker runtime、`verify-runtime.sh`、Pages deploy は検証対象外です。Pages の公開は既存の `deploy-pages.yml` が担います。
 
-加えて、生成 HTML の内部リンク、対象外ツールや古い導入コマンドが復活していないことを確認します。
+`bin/verify-site` は生成 HTML の href / src のローカルファイルと HTML アンカーを確認します。外部 URL はアクセスしません。旧リポジトリ名、旧 AI CLI npm パッケージ、廃止ツールと Windows 開発 CLI の既知の識別子は `scripts/site/verify.rb` の限定的な禁止パターンで検出します。生成 HTML と README・index・docs・セットアップスクリプトを検査し、新しい対象外ツール一般の判断はレビューに残します。
+
+公開時の baseurl を含めて検証する場合は `./bin/build-site --baseurl /windows-setup` に続けて `./bin/verify-site _site /windows-setup` を実行します。別の生成先も第1引数で指定できます。

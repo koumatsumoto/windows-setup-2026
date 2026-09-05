@@ -109,7 +109,21 @@ else
   fail 'Docker Compose CLI を利用できません。'
 fi
 
+for key in user.name user.email; do
+  if value="$(git config --global --get "$key" 2>/dev/null)" && [[ "$value" =~ [^[:space:]] ]]; then
+    pass "Git global $key は設定済みです。"
+  else
+    fail "Git global $key が未設定です。git config --global $key で設定してください。"
+  fi
+done
+if [[ "$(git config --global --get init.defaultBranch 2>/dev/null)" == "main" ]]; then
+  pass 'Git global init.defaultBranch は main です。'
+else
+  fail 'git config --global init.defaultBranch main を実行してください。'
+fi
+
 if gh auth status >/dev/null 2>&1; then pass 'GitHub CLI は認証済みです。'; else fail 'GitHub CLI は未認証です。'; fi
+printf '[手動確認] gh auth setup-git を実施済みであることを確認してください。\n'
 if [[ "$final" == true ]]; then
   if check_command codex; then
     if codex login status >/dev/null 2>&1; then pass 'Codex は認証済みです。'; else fail 'Codex は未認証です。'; fi

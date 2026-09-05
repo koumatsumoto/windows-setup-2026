@@ -37,11 +37,22 @@ Set-Location "$destination\windows-setup-main"
 
 ```powershell
 Set-ExecutionPolicy -Scope Process RemoteSigned
+$repo = Join-Path $env:USERPROFILE 'Downloads\windows-setup\windows-setup-main'
+Set-Location $repo
 & .\scripts\windows\Install-Setup.ps1 -WhatIf
 & .\scripts\windows\Install-Setup.ps1
 ```
 
 パッケージ ID と Ubuntu 名の正本は `scripts/windows/SetupConfig.psd1` です。スクリプトは導入済みアプリをスキップし、`wsl --update` で WSL 本体を通常の安定版経路で更新します。アプリ削除、アカウント操作、OneDrive 設定を行いません。Ubuntu を今回新規導入した場合は、その時点で正常終了します。再起動を求められたら Windows を再起動し、求められなかった場合も同じスクリプトをもう一度実行してください。WSL 本体の更新と既定バージョン・既定ディストリビューションの設定は、再実行時に行います。
+
+再起動後は `kou` の管理者 PowerShell を開き、次のブロック全体を実行します。再起動しなかった場合の再実行にも使えます。ZIP を別の場所に展開した場合は `$repo` を実際の展開先に置き換えてください。
+
+```powershell
+Set-ExecutionPolicy -Scope Process RemoteSigned
+$repo = Join-Path $env:USERPROFILE 'Downloads\windows-setup\windows-setup-main'
+Set-Location $repo
+& .\scripts\windows\Install-Setup.ps1
+```
 
 ## 3. Ubuntu を初回起動する
 
@@ -94,6 +105,9 @@ code .
 管理者でない通常の PowerShell から read-only 検証を実行します。
 
 ```powershell
+Set-ExecutionPolicy -Scope Process RemoteSigned
+$repo = Join-Path $env:USERPROFILE 'Downloads\windows-setup\windows-setup-main'
+Set-Location $repo
 & .\scripts\windows\Verify-Setup.ps1
 ```
 

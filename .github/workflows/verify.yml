@@ -1,6 +1,8 @@
 name: Verify
 
 on:
+  push:
+    branches: [main]
   pull_request:
   workflow_dispatch:
 
@@ -17,7 +19,7 @@ jobs:
       - name: Bash syntax
         shell: bash
         run: |
-          for file in bin/setup-site bin/build-site bin/serve-site \
+          for file in bin/setup-site bin/build-site bin/serve-site bin/verify-site \
             scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
             bash -n "$file" || exit 1
           done
@@ -26,7 +28,7 @@ jobs:
         shell: bash
         run: |
           shellcheck --external-sources --source-path=SCRIPTDIR \
-            bin/setup-site bin/build-site bin/serve-site \
+            bin/setup-site bin/build-site bin/serve-site bin/verify-site \
             scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh
 
       - name: Git helper integration tests
@@ -44,6 +46,18 @@ jobs:
       - name: Build with Jekyll
         run: ./bin/build-site
 
+      - name: Verify generated site and regression tests
+        run: |
+          ./bin/verify-site
+          ./bin/verify-site --self-test
+
+      - name: WSL verification and config sync tests
+        run: |
+          bash tests/shell/wsl-setup-test.sh
+          docker run --rm -e WINDOWS_SETUP_DISPOSABLE_TEST=1 \
+            -v "$PWD:/app:ro" -w /app ubuntu:26.04 \
+            bash tests/shell/sync-config-test.sh
+
   windows:
     runs-on: windows-latest
     steps:
@@ -53,7 +67,7 @@ jobs:
       - name: Bash syntax
         shell: bash
         run: |
-          for file in bin/setup-site bin/build-site bin/serve-site \
+          for file in bin/setup-site bin/build-site bin/serve-site bin/verify-site \
             scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
             bash -n "$file" || exit 1
           done

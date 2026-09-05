@@ -5,6 +5,7 @@
 EXPECTED_UBUNTU_VERSION="26.04"
 
 APT_PACKAGES=(
+  # build-essential and python3 support Node.js native addon builds (node-gyp).
   build-essential
   ca-certificates
   curl
