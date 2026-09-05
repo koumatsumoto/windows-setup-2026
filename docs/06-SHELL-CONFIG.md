@@ -18,15 +18,31 @@ nav_section: reference
 
 - `~/.local/bin`、fnm、Codex の実行パス
 - `fnm env --use-on-cd --shell bash` による Node.js の切り替え
+- `grb` / `grw` Git helper の読み込み
 
-エイリアス、プロンプト、Git 操作、apt 更新、Windows アプリ起動などの個人用関数は復旧条件に含めません。必要になった時点で自分の dotfiles として別管理します。
+`grb` は `main` を `origin/main` へ安全に fast-forward した後、`main` にマージ済みで、どの worktree でも使用されていないローカルbranchだけを削除します。呼び出し元のbranchは切り替えません。local `main` が ahead または diverged の場合は、branchを削除せず停止します。
+
+`grw` はprimary worktreeが `main` の場合に、すべてのlinked worktreeを削除します。dirty worktreeも削除しますが、locked worktreeは残し、branch自体は削除しません。primary worktreeが `main` でない場合は、何も削除せず停止します。
+
+そのほかのエイリアス、プロンプト、apt 更新、Windows アプリ起動などの個人用関数は復旧条件に含めません。
+
+## Git Bashで使う
+
+Git for Windows / Git Bashを既に導入している場合は、このリポジトリ内の同じfragmentを `~/.bashrc` からsourceします。Git for Windowsの導入自体は、このセットアップの必須項目ではありません。
+
+```bash
+[ -f "/c/Users/kou/path/to/windows-setup-2026/scripts/shell/git-helpers.sh" ] && \
+  . "/c/Users/kou/path/to/windows-setup-2026/scripts/shell/git-helpers.sh"
+```
+
+`/c/Users/kou/path/to/windows-setup-2026` は実際のclone先へ置き換えます。空白を含むpathでも、上記のように引用符で囲めば利用できます。
 
 ## 確認
 
 ```bash
 grep -F '.config/windows-setup/env.sh' ~/.bashrc
 sed -n '1,80p' ~/.config/windows-setup/env.sh
-type fnm node uv codex claude playwright-cli
+type fnm node uv codex claude playwright-cli grb grw
 ```
 
 source 行が1件だけであることを確認します。再実行時にも重複しません。
