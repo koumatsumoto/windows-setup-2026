@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -uo pipefail
 
+final=false
+if [[ $# -eq 1 && "$1" == "--final" ]]; then
+  final=true
+elif [[ $# -ne 0 ]]; then
+  echo "usage: $0 [--final]" >&2
+  exit 2
+fi
+
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=config.sh
 source "$script_dir/config.sh"
@@ -16,6 +24,7 @@ check_command() {
     pass "$command_name が見つかりました。"
   else
     fail "$command_name が見つかりません。"
+    return 1
   fi
 }
 
@@ -66,7 +75,7 @@ else
   fail ".bashrc の source 行が1件ではありません (現在: $source_count)。"
 fi
 
-for command_name in git gh fnm node npm uv playwright-cli codex claude docker; do
+for command_name in git gh fnm node npm uv playwright-cli docker; do
   check_command "$command_name"
 done
 
@@ -101,8 +110,14 @@ else
 fi
 
 if gh auth status >/dev/null 2>&1; then pass 'GitHub CLI は認証済みです。'; else fail 'GitHub CLI は未認証です。'; fi
-if codex login status >/dev/null 2>&1; then pass 'Codex は認証済みです。'; else fail 'Codex は未認証です。'; fi
-if claude auth status >/dev/null 2>&1; then pass 'Claude Code は認証済みです。'; else fail 'Claude Code は未認証です。'; fi
+if [[ "$final" == true ]]; then
+  if check_command codex; then
+    if codex login status >/dev/null 2>&1; then pass 'Codex は認証済みです。'; else fail 'Codex は未認証です。'; fi
+  fi
+  if check_command claude; then
+    if claude auth status >/dev/null 2>&1; then pass 'Claude Code は認証済みです。'; else fail 'Claude Code は未認証です。'; fi
+  fi
+fi
 
 if [[ $failures -gt 0 ]]; then
   printf '%d 件の必須チェックが失敗しました。\n' "$failures" >&2

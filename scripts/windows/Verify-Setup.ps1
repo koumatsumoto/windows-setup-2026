@@ -138,6 +138,14 @@ if ($distributionReady) {
     Add-Result FAIL "$distribution on WSL 2 was not detected."
 }
 
+$distributionDefault = $wslList.ExitCode -eq 0 -and
+    $wslList.Output -match "(?m)^\s*\*\s*$([regex]::Escape($distribution))\s+.+\s+\d+\s*$"
+if ($distributionDefault) {
+    Add-Result PASS "$distribution is the default WSL distribution."
+} else {
+    Add-Result FAIL "$distribution is not the default WSL distribution."
+}
+
 if ($distributionReady) {
     & wsl.exe --distribution $distribution -- sh -lc 'command -v docker >/dev/null && docker compose version >/dev/null' 2>$null
     if ($LASTEXITCODE -eq 0) {

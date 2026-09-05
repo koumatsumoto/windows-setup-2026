@@ -110,6 +110,8 @@ playwright-cli -s=smoke close
 
 ## 7. read-only 検証
 
+WSL 基盤と GitHub CLI の認証を確認します。Codex / Claude Code の導入・認証は次の Step 5 で確認します。
+
 ```bash
 ./scripts/wsl/verify.sh
 ```

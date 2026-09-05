@@ -51,6 +51,7 @@ tmp_dir="$(mktemp -d)"
 trap 'rm -rf -- "$tmp_dir"' EXIT
 
 curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg -o "$tmp_dir/githubcli.gpg"
+sudo install -d -m 0755 /etc/apt/keyrings /etc/apt/sources.list.d
 sudo install -m 0644 "$tmp_dir/githubcli.gpg" "$keyring"
 printf 'deb [arch=%s signed-by=%s] https://cli.github.com/packages stable main\n' \
   "$(dpkg --print-architecture)" "$keyring" | sudo tee "$repo_file" >/dev/null

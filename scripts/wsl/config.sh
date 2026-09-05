@@ -1,14 +1,12 @@
 #!/usr/bin/env bash
 
 EXPECTED_UBUNTU_VERSION="26.04"
-EXPECTED_WSL_DISTRIBUTION="Ubuntu-26.04"
 
 APT_PACKAGES=(
   build-essential
   ca-certificates
   curl
   git
-  gnupg
   python3
   unzip
 )

@@ -42,16 +42,16 @@ codex
 claude
 ```
 
-認証情報、API キー、セッションファイルはこのリポジトリへコピーしません。`verify.sh` は認証の成否だけを確認し、アカウント名やトークンを表示しません。
+認証情報、API キー、セッションファイルはこのリポジトリへコピーしません。`verify.sh --final` は認証の成否だけを確認し、アカウント名やトークンを表示しません。
 
 ## 3. WSL の最終確認
 
 ```bash
-./scripts/wsl/verify.sh
+./scripts/wsl/verify.sh --final
 ./scripts/wsl/verify-runtime.sh
 ```
 
-すべて PASS になり、認証だけが未完了なら Codex / Claude Code を再度起動します。`verify-runtime.sh` は Docker daemon と一時 Playwright セッションを実際に起動して閉じます。
+`verify.sh --final` は WSL 基盤に加え、Codex / Claude Code の存在と認証を確認します。認証だけが未完了なら Codex / Claude Code を再度起動します。`verify-runtime.sh` は Docker daemon と一時 Playwright セッションを実際に起動して閉じます。
 
 ## 4. Windows の最終確認
 

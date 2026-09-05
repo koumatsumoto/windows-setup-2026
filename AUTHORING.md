@@ -4,7 +4,7 @@
 
 ## ローカル確認
 
-Ruby / Bundler がある環境では次を実行します。依存は `vendor/bundle` に閉じます。
+Ruby 3.3 / Bundler がある環境では次を実行します。依存は `vendor/bundle` に閉じます。
 
 ```bash
 ./bin/setup-site
@@ -40,9 +40,37 @@ playwright-cli -s=docs-check close
 
 ## 変更時の検証
 
+サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。
+
 ```bash
+for file in bin/setup-site bin/build-site bin/serve-site \
+  scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
+  bash -n "$file" || exit 1
+done
+
+bash tests/shell/git-helpers-test.sh
 ./bin/build-site
-bash -n scripts/wsl/*.sh
 ```
 
-加えて、PowerShell スクリプトの構文、生成 HTML の内部リンク、対象外ツールや古い導入コマンドが復活していないことを確認します。Windows / WSL の導入スクリプトは実機を変更するため、通常のサイト確認では dry-run までに留めます。
+PowerShell スクリプトまたは `SetupConfig.psd1` を変更した場合は、Windows PowerShell 5.1 で次も実行します。スクリプト本体は実行せず、構文とデータファイルの読み込みを確認します。
+
+```powershell
+$ErrorActionPreference = 'Stop'
+foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {
+    $parseErrors = $null
+    $tokens = $null
+    $null = [System.Management.Automation.Language.Parser]::ParseFile(
+        $file.FullName, [ref]$tokens, [ref]$parseErrors)
+    if ($parseErrors.Count -gt 0) {
+        $parseErrors | ForEach-Object { Write-Host $_ }
+        throw "PowerShell parse failed: $($file.Name)"
+    }
+}
+$null = Import-PowerShellDataFile ./scripts/windows/SetupConfig.psd1
+```
+
+PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。
+
+CI はセットアップを実行しません。winget / apt / WSL install、AI CLI install・認証、Docker runtime、`verify-runtime.sh`、Pages deploy は対象外です。Pages の公開は既存の `deploy-pages.yml` が担います。
+
+加えて、生成 HTML の内部リンク、対象外ツールや古い導入コマンドが復活していないことを確認します。
