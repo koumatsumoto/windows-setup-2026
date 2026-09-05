@@ -83,7 +83,7 @@ grb() {
 }
 
 # Keep the primary default-branch worktree and remove every linked worktree.
-# Local branch refs remain available for a later grb cleanup.
+# Local branch refs remain available for a later grb or combined gr cleanup.
 grw() {
   local default_branch field wt branch primary_wt primary_branch
   local first_record=1 rc=0
@@ -149,4 +149,10 @@ grw() {
   done
 
   return "$rc"
+}
+
+# Remove linked worktrees before updating the default branch and deleting
+# merged local branches that are no longer in use.
+gr() {
+  grw && grb
 }

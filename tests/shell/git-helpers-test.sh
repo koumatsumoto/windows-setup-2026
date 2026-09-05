@@ -239,6 +239,45 @@ test_grw_noop() {
   [[ "$output" == 'grw: no linked worktrees' ]] || fail 'grw no-op output changed'
 }
 
+test_gr_combines_worktree_and_branch_cleanup() {
+  local repo merged_wt unmerged_wt
+  repo="$(new_repo gr-combined)"
+  merged_wt="$tmp_root/gr merged"
+  unmerged_wt="$tmp_root/gr unmerged"
+
+  git -C "$repo" worktree add --quiet -b merged-linked "$merged_wt"
+  git -C "$repo" worktree add --quiet -b unmerged-linked "$unmerged_wt"
+  printf 'unmerged\n' >"$unmerged_wt/unmerged.txt"
+  git -C "$unmerged_wt" add unmerged.txt
+  git -C "$unmerged_wt" commit --quiet -m unmerged
+  push_remote_update "$repo" gr-combined
+
+  cd -- "$merged_wt"
+  gr
+
+  [[ "$PWD" -ef "$repo" ]] || fail 'gr did not finish in the primary worktree'
+  [[ ! -e "$merged_wt" && ! -e "$unmerged_wt" ]] || fail 'gr left a linked worktree'
+  assert_no_ref "$repo" refs/heads/merged-linked
+  assert_ref "$repo" refs/heads/unmerged-linked
+  [[ "$(git -C "$repo" rev-parse main)" == "$(git -C "$repo" rev-parse origin/main)" ]] || fail 'gr did not update checked-out main'
+}
+
+test_gr_stops_when_grw_fails() {
+  local marker="$tmp_root/grb-called" rc
+
+  set +e
+  (
+    grw() { return 23; }
+    grb() { touch "$marker"; }
+    gr
+  )
+  rc=$?
+  set -e
+
+  [[ $rc -eq 23 ]] || fail 'gr did not return the grw failure status'
+  [[ ! -e "$marker" ]] || fail 'gr ran grb after grw failed'
+}
+
 test_non_main_default_branch() {
   local repo linked_wt
   repo="$(new_repo non-main-default trunk)"
@@ -317,6 +356,7 @@ test_managed_env_sources_helpers() {
 
   HOME="$tmp_root/home" PATH=/usr/bin:/bin bash --noprofile --norc -c '
     source "$1/env.sh"
+    declare -F gr >/dev/null
     declare -F grb >/dev/null
     declare -F grw >/dev/null
   ' _ "$config_dir" || fail 'managed env did not source Git helpers'
@@ -331,6 +371,8 @@ test_grb_continues_after_delete_failure
 test_grw_removes_linked_worktrees
 test_grw_refuses_non_main_primary
 test_grw_noop
+test_gr_combines_worktree_and_branch_cleanup
+test_gr_stops_when_grw_fails
 test_non_main_default_branch
 test_changed_remote_default_ignores_stale_origin_head
 test_default_branch_with_narrow_fetch_refspec
