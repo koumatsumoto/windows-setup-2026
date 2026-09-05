@@ -18,7 +18,9 @@ nav_section: reference
 
 - `~/.local/bin`、fnm、Codex の実行パス
 - `fnm env --use-on-cd --shell bash` による Node.js の切り替え
-- `grb` / `grw` Git helper の読み込み
+- `gr` / `grb` / `grw` Git helper の読み込み
+
+`gr` は `grw`、`grb` の順に実行し、linked worktreeの削除、既定branchの更新、マージ済みlocal branchの削除を1コマンドで行います。個別の操作には引き続き `grw` と `grb` を利用できます。
 
 `grb` は `origin` のremote HEADが示す現在の既定branchを安全にfast-forwardした後、その既定branchにマージ済みで、どのworktreeでも使用されていないローカルbranchだけを削除します。呼び出し元のbranchは切り替えません。localの既定branchがaheadまたはdivergedの場合は、branchを削除せず停止します。
 
@@ -42,7 +44,7 @@ Git for Windows / Git Bashを既に導入している場合は、このリポジ
 ```bash
 grep -F '.config/windows-setup/env.sh' ~/.bashrc
 sed -n '1,80p' ~/.config/windows-setup/env.sh
-type fnm node uv codex claude playwright-cli grb grw
+type fnm node uv codex claude playwright-cli gr grb grw
 ```
 
 source 行が1件だけであることを確認します。再実行時にも重複しません。

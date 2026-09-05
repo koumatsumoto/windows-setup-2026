@@ -60,7 +60,7 @@ else
   fail '管理対象の Git helper フラグメントがありません。'
 fi
 
-for helper_name in grb grw; do
+for helper_name in gr grb grw; do
   if declare -F "$helper_name" >/dev/null 2>&1; then
     pass "$helper_name function を利用できます。"
   else
