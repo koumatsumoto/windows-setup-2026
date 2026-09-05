@@ -86,6 +86,10 @@ if ($installed -notcontains $distribution) {
     }
 }
 
+if ($PSCmdlet.ShouldProcess('WSL', 'Update WSL through the stable channel')) {
+    Invoke-CheckedCommand -FilePath 'wsl.exe' -ArgumentList @('--update')
+}
+
 if ($PSCmdlet.ShouldProcess('WSL', 'Set WSL 2 as the default for new distributions')) {
     Invoke-CheckedCommand -FilePath 'wsl.exe' -ArgumentList @('--set-default-version', '2')
 }

@@ -12,7 +12,9 @@ Windows 側には GUI と仮想化の境界だけを置き、開発 CLI とラ�
 
 ## 完了条件
 
-- VS Code、Docker Desktop、Chrome、PowerToys、7-Zip が導入されている。
+- VS Code、Docker Desktop、Chrome、PowerToys が導入されている。
+- VS Code の WSL 拡張 `ms-vscode-remote.remote-wsl` が導入されている。
+- WSL 本体を `wsl --update` で更新し、Ubuntu の初回起動と Linux ユーザー `kou` の作成が完了している。
 - WSL 2 と `Ubuntu-26.04` が導入され、既定ディストリビューションになっている。
 - Docker Desktop の WSL 2 engine と `Ubuntu-26.04` integration が有効である。
 - Ubuntu 内から `docker`、`docker compose`、`code .` が使える。
@@ -31,7 +33,7 @@ Set-Location "$destination\windows-setup-main"
 
 ## 2. 必須アプリと WSL を導入する
 
-PowerShell を管理者として開き、最初に dry-run を確認します。
+`kou` の PowerShell を管理者として開き、ZIP の展開先へ移動してから dry-run を確認します。
 
 ```powershell
 Set-ExecutionPolicy -Scope Process RemoteSigned
@@ -39,20 +41,28 @@ Set-ExecutionPolicy -Scope Process RemoteSigned
 & .\scripts\windows\Install-Setup.ps1
 ```
 
-パッケージ ID と Ubuntu 名の正本は `scripts/windows/SetupConfig.psd1` です。スクリプトは導入済みアプリをスキップし、アプリ削除、アカウント操作、OneDrive 設定を行いません。WSL の導入で再起動を求められたら、再起動後に同じスクリプトをもう一度実行します。
+パッケージ ID と Ubuntu 名の正本は `scripts/windows/SetupConfig.psd1` です。スクリプトは導入済みアプリをスキップし、`wsl --update` で WSL 本体を通常の安定版経路で更新します。アプリ削除、アカウント操作、OneDrive 設定を行いません。WSL の導入で再起動を求められたら、再起動後に同じスクリプトをもう一度実行します。
 
-`Ubuntu-26.04` の初回起動時に Linux ユーザー名とパスワードを作ります。ユーザー名は `kou` で構いません。
+## 3. Ubuntu を初回起動する
 
-Microsoft の現行 WSL 手順では `wsl --list --online` で配布名を確認し、`wsl --install -d <Distro>` で明示導入できます。このガイドは可変の `Ubuntu` ではなく `Ubuntu-26.04` を固定します。
+再起動とスクリプトの再実行を終えてから、`kou` の新しい通常の PowerShell / Windows Terminal を開きます。インストーラーは `--no-launch` を使うため、次のコマンドで明示的に起動します。
 
-## 3. Docker Desktop を WSL と接続する
+```powershell
+wsl -d Ubuntu-26.04
+```
+
+初回の案内に従って Linux ユーザー `kou` とパスワードを作成します。Ubuntu のプロンプトが表示されたら `whoami` が `kou` であることを確認し、`exit` で PowerShell に戻ります。ここまで完了してから Docker Desktop integration と WSL 側 bootstrap へ進みます。
+
+[Microsoft の WSL コマンド](https://learn.microsoft.com/en-us/windows/wsl/basic-commands)では `wsl --list --online` で配布名を確認し、`wsl --install -d <Distro>` で明示導入できます。このガイドは可変の `Ubuntu` ではなく `Ubuntu-26.04` を固定します。
+
+## 4. Docker Desktop を WSL と接続する
 
 1. Docker Desktop を起動する。
 2. Settings → General で「Use the WSL 2 based engine」が表示される場合は有効にする。
 3. Settings → Resources → WSL Integration で `Ubuntu-26.04` を有効にする。
 4. Apply を選ぶ。
 
-Ubuntu 側へ Docker Engine や `docker.io` を別途インストールしません。Docker 公式も、WSL 内へ直接入れた Engine / CLI との併用は競合しうると説明しています。
+Ubuntu 側へ Docker Engine や `docker.io` を別途インストールしません。[Docker 公式](https://docs.docker.com/desktop/features/wsl/)も、WSL 内へ直接入れた Engine / CLI との併用は競合しうると説明しています。
 
 Ubuntu で確認します。
 
@@ -61,9 +71,15 @@ docker version
 docker compose version
 ```
 
-## 4. VS Code を WSL から起動する
+## 5. VS Code の WSL 拡張を導入して起動する
 
-Ubuntu のホーム以下に作業ディレクトリを置き、次を実行します。
+VS Code 導入後に開いた新しい通常の PowerShell で、[WSL 拡張](https://code.visualstudio.com/docs/remote/wsl-tutorial)を導入します。
+
+```powershell
+code --install-extension ms-vscode-remote.remote-wsl
+```
+
+完了後、Ubuntu のホーム以下に作業ディレクトリを置き、次を実行します。
 
 ```bash
 mkdir -p ~/work
@@ -73,7 +89,7 @@ code .
 
 初回は VS Code が WSL 用サーバーを導入します。画面左下に `WSL: Ubuntu-26.04` が表示されることを確認します。
 
-## 5. Windows 側を検証する
+## 6. Windows 側を検証する
 
 管理者でない通常の PowerShell から read-only 検証を実行します。
 
@@ -81,7 +97,9 @@ code .
 & .\scripts\windows\Verify-Setup.ps1
 ```
 
-IME と OneDrive の一部は公開 API だけでは断定できないため、スクリプトが示す「手動確認」も完了させます。
+検証では WSL の version / status を診断情報として表示し、WSL 2・既定ディストリビューションと WSL 拡張の有無を確認します。`code` コマンドの存在だけでは WSL window の動作確認になりません。
+
+Explorer、IME、OneDrive、Windows Update、VS Code window などの一部は公開 API だけでは断定できないため、スクリプトが示す「手動確認」も完了させます。
 
 ## 次に読む
 

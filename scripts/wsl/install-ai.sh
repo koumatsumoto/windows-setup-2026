@@ -38,10 +38,10 @@ trap 'rm -rf -- "$tmp_dir"' EXIT
 # their supported installers from adding another PATH block to a shell profile.
 export PATH="$HOME/.local/bin:$PATH"
 
-curl -fsSL "$CODEX_INSTALL_URL" -o "$tmp_dir/install-codex.sh"
+curl -fsSL --retry 3 --retry-all-errors "$CODEX_INSTALL_URL" -o "$tmp_dir/install-codex.sh"
 sh "$tmp_dir/install-codex.sh"
 
-curl -fsSL "$CLAUDE_INSTALL_URL" -o "$tmp_dir/install-claude.sh"
+curl -fsSL --retry 3 --retry-all-errors "$CLAUDE_INSTALL_URL" -o "$tmp_dir/install-claude.sh"
 bash "$tmp_dir/install-claude.sh"
 
 echo 'Codex と Claude Code を導入しました。新しいシェルで各 CLI を起動し、手動で認証してください。'

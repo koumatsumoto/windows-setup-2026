@@ -44,7 +44,7 @@ nav_section: setup
 
 ## 3. Explorer
 
-Explorer → 表示 → 表示 で「ファイル名拡張子」と「隠しファイル」を有効にします。アドレスバーへ `%USERPROFILE%` を入力し、`Desktop`、`Documents`、`Downloads` が英語名の実フォルダーとして存在することも確認します。
+Explorer → 表示 → 表示 で「ファイル名拡張子」と「隠しファイル」を有効にします。アドレスバーへ `%USERPROFILE%` を入力し、`Desktop`、`Documents`、`Downloads`、`Pictures` が英語名の実フォルダーとして存在することも確認します。
 
 ## 4. OneDrive を使わない状態にする
 
@@ -63,12 +63,13 @@ Windows や Microsoft アカウントの案内で、OneDrive のサインイン�
 ```powershell
 [Environment]::GetFolderPath('Desktop')
 [Environment]::GetFolderPath('MyDocuments')
+[Environment]::GetFolderPath('MyPictures')
 (Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders').'{374DE290-123F-4565-9164-39C4925E467B}'
 Get-CimInstance Win32_StartupCommand | Where-Object Name -Match OneDrive
 Get-Process OneDrive -ErrorAction SilentlyContinue
 ```
 
-最初の3行が `C:\Users\kou` 直下を指し、再サインイン後に後半2つが何も返さないことを確認します。OneDrive のリンク解除は [Microsoft の公式手順](https://support.microsoft.com/en-US/onedrive/how-to-remove-an-account-in-onedrive)、フォルダーバックアップは [バックアップ管理](https://support.microsoft.com/en-US/onedrive/back-up-your-folders-with-onedrive) を参照します。
+最初の4行が `C:\Users\kou` 直下を指し、再サインイン後に後半2つが何も返さないことを確認します。OneDrive のリンク解除は [Microsoft の公式手順](https://support.microsoft.com/en-US/onedrive/how-to-remove-an-account-in-onedrive)、フォルダーバックアップは [バックアップ管理](https://support.microsoft.com/en-US/onedrive/back-up-your-folders-with-onedrive) を参照します。
 
 ## 次に読む
 

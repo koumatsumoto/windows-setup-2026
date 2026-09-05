@@ -2,6 +2,7 @@ title: windows-setup
 description: 必要最小限の Windows 11 と WSL 開発環境を再構築するための手順書
 lang: ja
 timezone: Asia/Tokyo
+verified_on: "2026-09-05"
 markdown: kramdown
 plugins:
   - jekyll-seo-tag
@@ -19,5 +20,3 @@ theme_settings:
   home_nav_label: Home
   mobile_nav_label: Guide
   docs_path_prefix: /docs/
-  show_build_time: true
-  build_time_label: サイト生成

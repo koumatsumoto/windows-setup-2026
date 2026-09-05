@@ -23,6 +23,10 @@ Ruby 3.3 / Bundler がある環境では次を実行します。依存は `vendo
 - 既存の `/docs/.../` permalink は維持し、本文リンクは `relative_url` を使う。
 - 共通フレームは `_layouts/default.html`、ナビ描画は `_includes/site-nav-links.html`、見た目は `assets/css/style.scss` が担う。
 
+## 内容確認日
+
+`_config.yml` の `verified_on` は、Windows / WSL / ツールの導入経路など主要な前提を公式仕様と照合した日です。単なるページ編集やビルドでは更新せず、主要前提を再照合した場合だけ更新します。実機でのセットアップ実施日ではありません。
+
 ## 表示確認
 
 サイトを起動した状態で、グローバル `playwright-cli` を使います。リポジトリには CLI が生成する skill やブラウザープロファイルを保存しません。
@@ -40,13 +44,17 @@ playwright-cli -s=docs-check close
 
 ## 変更時の検証
 
-サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。
+サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。ShellCheck も必要です。GitHub Actions と Bundler の依存更新は Dependabot が月次で確認します。
 
 ```bash
 for file in bin/setup-site bin/build-site bin/serve-site \
   scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh; do
   bash -n "$file" || exit 1
 done
+
+shellcheck --external-sources --source-path=SCRIPTDIR \
+  bin/setup-site bin/build-site bin/serve-site \
+  scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh
 
 bash tests/shell/git-helpers-test.sh
 ./bin/build-site
@@ -69,7 +77,7 @@ foreach ($file in Get-ChildItem ./scripts/windows/*.ps1) {
 $null = Import-PowerShellDataFile ./scripts/windows/SetupConfig.psd1
 ```
 
-PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。
+PR と手動実行では `.github/workflows/verify.yml` が Ubuntu の Bash 構文・ShellCheck・Git helper integration test・Ruby 3.3 による Jekyll build、Windows の Git Bash で同じ Bash 検証・Windows PowerShell 5.1 の構文・設定ファイル読み込みを自動確認します。
 
 CI はセットアップを実行しません。winget / apt / WSL install、AI CLI install・認証、Docker runtime、`verify-runtime.sh`、Pages deploy は対象外です。Pages の公開は既存の `deploy-pages.yml` が担います。
 

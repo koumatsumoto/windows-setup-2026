@@ -5,7 +5,7 @@ nav_hidden: true
 
 # Windows Setup
 
-最新安定版の日本語 Windows 11 を基準に、必要最小限の開発環境を復旧する手順です。判断を減らすため、必須手順は次の5段階だけにしています。
+対象端末に Microsoft が通常提供する、サポート中の日本語 Windows 11（GA / 安定版） を基準に、必要最小限の開発環境を復旧する手順です。判断を減らすため、必須手順は次の5段階だけにしています。
 
 ## 必須セットアップ
 
@@ -19,11 +19,12 @@ nav_hidden: true
 
 ## 復旧完了条件
 
-- Windows は安定版で、Insider Program に参加していない。
-- Windows プロファイルは `C:\Users\kou`、既知のフォルダーの実パスは `Documents`、`Desktop`、`Downloads` の英語名である。
+- Windows はサポート中の GA / 安定版で、その端末向けの通常更新を適用し、Insider Program に参加していない。
+- Windows プロファイルは `C:\Users\kou`、既知のフォルダーの実パスは `Documents`、`Desktop`、`Downloads`、`Pictures` の英語名である。
 - 日本語表示・地域・システムロケール・日本語キーボードと、個人用 IME キー設定が復旧している。
 - OneDrive はアプリを残し、未サインイン、フォルダーバックアップ無効、自動起動無効である。
-- Windows 側は VS Code、Docker Desktop、Chrome、PowerToys、7-Zip のみをこのガイドで導入する。
+- Windows 側は VS Code、Docker Desktop、Chrome、PowerToys のみをこのガイドで導入する。
+- VS Code の WSL 拡張 `ms-vscode-remote.remote-wsl` を導入し、Ubuntu から WSL window を開ける。
 - WSL 2 の `Ubuntu-26.04` で Git / GitHub、Node.js / TypeScript、Python / uv、Docker、Playwright、Codex、Claude Code が使える。
 - Playwright Test はプロジェクトの依存と lockfile で管理し、AI エージェント用 `playwright-cli` だけをグローバル導入する。
 
