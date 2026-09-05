@@ -200,7 +200,7 @@ test_grw_removes_linked_worktrees() {
   set -e
 
   [[ $rc -ne 0 ]] || fail 'grw ignored a locked worktree'
-  [[ "$PWD" == "$repo" ]] || fail 'grw did not move to the primary worktree'
+  [[ "$PWD" -ef "$repo" ]] || fail 'grw did not move to the primary worktree'
   [[ ! -e "$caller_wt" && ! -e "$detached_wt" && ! -e "$dirty_wt" ]] || fail 'grw left a removable linked worktree'
   [[ -d "$locked_wt" ]] || fail 'grw removed a locked worktree'
   assert_ref "$repo" refs/heads/caller
