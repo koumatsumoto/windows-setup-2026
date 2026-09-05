@@ -22,11 +22,11 @@ Windows 側には GUI と仮想化の境界だけを置き、開発 CLI とラ�
 Windows PowerShell で次を実行します。Git を Windows へ入れずに、公開リポジトリの ZIP を展開します。
 
 ```powershell
-$zip = Join-Path $env:TEMP 'windows-setup-2026.zip'
-$destination = Join-Path $env:USERPROFILE 'Downloads\windows-setup-2026'
-Invoke-WebRequest 'https://github.com/koumatsumoto/windows-setup-2026/archive/refs/heads/main.zip' -OutFile $zip
+$zip = Join-Path $env:TEMP 'windows-setup.zip'
+$destination = Join-Path $env:USERPROFILE 'Downloads\windows-setup'
+Invoke-WebRequest 'https://github.com/koumatsumoto/windows-setup/archive/refs/heads/main.zip' -OutFile $zip
 Expand-Archive $zip -DestinationPath $destination -Force
-Set-Location "$destination\windows-setup-2026-main"
+Set-Location "$destination\windows-setup-main"
 ```
 
 ## 2. 必須アプリと WSL を導入する
