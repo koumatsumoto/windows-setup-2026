@@ -288,6 +288,27 @@ test_changed_remote_default_ignores_stale_origin_head() {
   [[ -d "$linked_wt" ]] || fail 'grw removed a worktree when primary was not the current default branch'
 }
 
+test_default_branch_with_narrow_fetch_refspec() {
+  local repo remote
+  repo="$(new_repo narrow-fetch)"
+  remote="$(git -C "$repo" remote get-url origin)"
+  git -C "$repo" branch trunk
+  git -C "$repo" branch merged-delete trunk
+  git -C "$repo" push --quiet origin trunk
+  git -C "$remote" symbolic-ref HEAD refs/heads/trunk
+  git -C "$repo" config --unset-all remote.origin.fetch
+  git -C "$repo" config --add remote.origin.fetch '+refs/heads/main:refs/remotes/origin/main'
+  git -C "$repo" update-ref -d refs/remotes/origin/trunk
+  push_remote_update "$repo" narrow-fetch
+
+  cd -- "$repo"
+  grb
+
+  assert_ref "$repo" refs/remotes/origin/trunk
+  [[ "$(git rev-parse trunk)" == "$(git rev-parse origin/trunk)" ]] || fail 'grb did not update the default branch with a narrow fetch refspec'
+  assert_no_ref "$repo" refs/heads/merged-delete
+}
+
 test_managed_env_sources_helpers() {
   local config_dir="$tmp_root/managed config"
   mkdir -p "$config_dir"
@@ -312,6 +333,7 @@ test_grw_refuses_non_main_primary
 test_grw_noop
 test_non_main_default_branch
 test_changed_remote_default_ignores_stale_origin_head
+test_default_branch_with_narrow_fetch_refspec
 test_managed_env_sources_helpers
 
 printf '[PASS] git helper integration tests\n'

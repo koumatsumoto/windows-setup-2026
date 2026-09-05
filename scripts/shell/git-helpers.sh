@@ -41,7 +41,9 @@ grb() {
     return 1
   }
 
-  git fetch origin "$default_branch" || return 1
+  git fetch origin \
+    "refs/heads/$default_branch:$remote_default_ref" ||
+    return 1
 
   git show-ref --verify --quiet "$remote_default_ref" || {
     echo "grb: remote-tracking branch 'origin/$default_branch' does not exist" >&2
