@@ -44,7 +44,7 @@ playwright-cli -s=docs-check close
 
 ## 変更時の検証
 
-サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。ShellCheck も必要です。GitHub Actions と Bundler の依存更新は Dependabot が月次で確認します。
+サイト依存を `./bin/setup-site` で用意したうえで、リポジトリのルートから実行します。Bash 構文は各ファイルを個別に検査します。ShellCheck は CI で必須です。GitHub Actions と Bundler の依存更新は Dependabot が月次で確認します。
 
 ```bash
 for file in bin/setup-site bin/build-site bin/serve-site \
@@ -52,12 +52,16 @@ for file in bin/setup-site bin/build-site bin/serve-site \
   bash -n "$file" || exit 1
 done
 
+bash tests/shell/git-helpers-test.sh
+./bin/build-site
+```
+
+CI の ShellCheck をローカルで再現する場合は、ShellCheck を別途用意して次を実行します。標準の WSL セットアップには含めません。
+
+```bash
 shellcheck --external-sources --source-path=SCRIPTDIR \
   bin/setup-site bin/build-site bin/serve-site \
   scripts/shell/*.sh scripts/wsl/*.sh tests/shell/*.sh
-
-bash tests/shell/git-helpers-test.sh
-./bin/build-site
 ```
 
 PowerShell スクリプトまたは `SetupConfig.psd1` を変更した場合は、Windows PowerShell 5.1 で次も実行します。スクリプト本体は実行せず、構文とデータファイルの読み込みを確認します。

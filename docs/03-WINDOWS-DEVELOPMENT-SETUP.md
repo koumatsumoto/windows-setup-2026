@@ -41,7 +41,7 @@ Set-ExecutionPolicy -Scope Process RemoteSigned
 & .\scripts\windows\Install-Setup.ps1
 ```
 
-パッケージ ID と Ubuntu 名の正本は `scripts/windows/SetupConfig.psd1` です。スクリプトは導入済みアプリをスキップし、`wsl --update` で WSL 本体を通常の安定版経路で更新します。アプリ削除、アカウント操作、OneDrive 設定を行いません。WSL の導入で再起動を求められたら、再起動後に同じスクリプトをもう一度実行します。
+パッケージ ID と Ubuntu 名の正本は `scripts/windows/SetupConfig.psd1` です。スクリプトは導入済みアプリをスキップし、`wsl --update` で WSL 本体を通常の安定版経路で更新します。アプリ削除、アカウント操作、OneDrive 設定を行いません。Ubuntu を今回新規導入した場合は、その時点で正常終了します。再起動を求められたら Windows を再起動し、求められなかった場合も同じスクリプトをもう一度実行してください。WSL 本体の更新と既定バージョン・既定ディストリビューションの設定は、再実行時に行います。
 
 ## 3. Ubuntu を初回起動する
 
