@@ -39,14 +39,33 @@ Git for Windows / Git Bashを既に導入している場合は、このリポジ
 
 `/c/Users/kou/path/to/windows-setup` は実際のclone先へ置き換えます。空白を含むpathでも、上記のように引用符で囲めば利用できます。
 
-## 確認
+## 管理対象フラグメントを更新する
+
+WSL 基盤の導入済み環境では、リポジトリを更新した後に次を実行します。
+
+```bash
+cd ~/work/windows-setup
+git pull --ff-only
+./scripts/wsl/sync-config.sh
+exec bash
+```
+
+`env.sh` と `git-helpers.sh` のコピーだけを更新します。apt やランタイムの導入、`.bashrc` の変更は行いません。初回導入には Step 4 の `install.sh` を使います。
+
+## 基盤の確認
 
 ```bash
 grep -F '.config/windows-setup/env.sh' ~/.bashrc
 sed -n '1,80p' ~/.config/windows-setup/env.sh
-type fnm node uv codex claude playwright-cli gr grb grw
+type fnm node uv playwright-cli gr grb grw
 ```
 
 source 行が1件だけであることを確認します。再実行時にも重複しません。
+
+AI CLI の導入・認証を終えた Step 5 では、リポジトリのルートから最終確認を実行します。
+
+```bash
+./scripts/wsl/verify.sh --final
+```
 
 [04. WSL 開発環境]({{ '/docs/04-UBUNTU-SETUP/' | relative_url }}) に戻ります。

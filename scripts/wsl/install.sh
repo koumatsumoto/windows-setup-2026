@@ -62,10 +62,7 @@ curl -fsSL --retry 3 --retry-all-errors "$FNM_INSTALL_URL" -o "$tmp_dir/install-
 bash "$tmp_dir/install-fnm.sh" --skip-shell
 
 managed_env="$HOME/$MANAGED_ENV_RELATIVE_PATH"
-managed_git_helpers="$HOME/$MANAGED_GIT_HELPERS_RELATIVE_PATH"
-mkdir -p "$(dirname -- "$managed_env")"
-install -m 0644 "$script_dir/env.sh" "$managed_env"
-install -m 0644 "$script_dir/../shell/git-helpers.sh" "$managed_git_helpers"
+bash "$script_dir/sync-config.sh"
 
 touch "$HOME/.bashrc"
 if ! grep -Fqx "$MANAGED_SOURCE_LINE" "$HOME/.bashrc"; then
